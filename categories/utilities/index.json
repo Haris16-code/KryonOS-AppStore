@@ -1,12 +1,12 @@
 {
   "apps": {
-    "calculator": {
+    "Calculator": {
       "meta": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/utilities/Calculator/app.json",
       "app": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/utilities/Calculator/main.js"
     },
-    "notepad": {
-      "meta": "",
-      "app": ""
+    "Notepad": {
+      "meta": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/utilities/Notepad/app.json",
+      "app": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/utilities/Notepad/main.json"
     }
   }
 }
