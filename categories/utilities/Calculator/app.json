@@ -1,0 +1,11 @@
+{
+  "name": "Calculator",
+  "packageName": "com.kryonos.calculator",
+  "version": "1.0.0",
+  "api": 1,
+  "author": "KryonOS Team",
+  "type": "App",
+  "category": "Utility",
+  "description": "A basic calculator for quick math.",
+  "changelog": ""
+}
