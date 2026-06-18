@@ -1,0 +1,44 @@
+name: Auto-Generate App Registry
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'categories/**' # Only run when changes happen inside the categories folder
+  workflow_dispatch: # Allows you to run it manually from the Actions tab
+
+permissions:
+  contents: write
+
+jobs:
+  build-registry:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Run Registry Generator Script
+        run: node scripts/generate-registry.js
+
+      - name: Commit and Push Changes
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          
+          # Add the generated JSON files
+          git add index.json categories/**/index.json
+          
+          # Check if there are actual changes to commit
+          if git diff --staged --quiet; then
+            echo "No changes to the registry detected."
+          else
+            git commit -m "chore: auto-update OS app registry"
+            git push
+          fi
