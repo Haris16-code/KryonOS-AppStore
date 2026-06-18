@@ -32,13 +32,13 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           
-          # Add the generated JSON files
-          git add index.json categories/**/index.json
+          # Add the root index.json and EVERYTHING modified inside the categories folder (including app.json files)
+          git add index.json categories/
           
           # Check if there are actual changes to commit
           if git diff --staged --quiet; then
-            echo "No changes to the registry detected."
+            echo "No changes to the registry or app files detected."
           else
-            git commit -m "chore: auto-update OS app registry"
+            git commit -m "chore: auto-update OS app registry and app metaUrls"
             git push
           fi
