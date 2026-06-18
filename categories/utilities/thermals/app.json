@@ -1,6 +1,6 @@
 {
-  "name": "Thermals",
-  "packageName": "com.kryonos.thermals",
+  "name": "Thermal Monitoring",
+  "packageName": "com.kryonos.thermalmonitoring",
   "version": "1.0.0",
   "metaUrl": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/utilities/thermals/app.json",
   "api": 1,
