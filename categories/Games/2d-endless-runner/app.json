@@ -2,7 +2,7 @@
   "name": "2D Endless Runner",
   "packageName": "com.kryonos.2dendlessrunner",
   "version": "1.0.1",
-  "metaUrl": "",
+  "metaUrl": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/Games/2d-endless-runner/app.json",
   "api": 1,
   "author": "KryonOS Team",
   "type": "Game",
