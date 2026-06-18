@@ -1,6 +1,6 @@
 {
-  "name": "Sysinfo",
-  "packageName": "com.kryonos.sysinfo",
+  "name": "System Info",
+  "packageName": "com.kryonos.systeminfo",
   "version": "1.0.0",
   "metaUrl": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/utilities/sysinfo/app.json",
   "api": 1,
