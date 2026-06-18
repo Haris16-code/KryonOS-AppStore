@@ -1,0 +1,12 @@
+{
+  "name": "Paint",
+  "packageName": "com.kryonos.paint",
+  "version": "1.0.0",
+  "metaUrl": "",
+  "api": 1,
+  "author": "KryonOS Team",
+  "type": "App",
+  "category": "Utility",
+  "description": "A basic painting and drawing app.",
+  "changelog": ""
+}

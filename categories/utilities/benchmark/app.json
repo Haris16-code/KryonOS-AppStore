@@ -1,0 +1,12 @@
+{
+  "name": "Benchmark",
+  "packageName": "com.kryonos.benchmark",
+  "version": "1.0.0",
+  "metaUrl": "",
+  "api": 1,
+  "author": "KryonOS Team",
+  "type": "App",
+  "category": "Benchmark",
+  "description": "Tests CPU, 2D Graphics, and 3D Graphics performance.",
+  "changelog": ""
+}
