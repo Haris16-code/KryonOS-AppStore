@@ -1,6 +1,7 @@
 {
   "categories": {
     "Games": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/Games/index.json",
+    "Hardware": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/Hardware/index.json",
     "Utilities": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/utilities/index.json"
   }
 }

@@ -1,0 +1,8 @@
+{
+  "apps": {
+    "Led Controller": {
+      "meta": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/Hardware/led_controller/app.json",
+      "app": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/Hardware/led_controller/main.js"
+    }
+  }
+}
