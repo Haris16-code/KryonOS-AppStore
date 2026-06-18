@@ -1,0 +1,12 @@
+{
+  "name": "Tictactoe",
+  "packageName": "com.kryonos.tictactoe",
+  "version": "1.0.0",
+  "metaUrl": "",
+  "api": 1,
+  "author": "KryonOS Team",
+  "type": "Game",
+  "category": "Arcade",
+  "description": "A classic game of Tic-Tac-Toe.",
+  "changelog": ""
+}
