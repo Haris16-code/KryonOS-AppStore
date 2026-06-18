@@ -1,9 +1,9 @@
 {
   "name": "Calculator",
   "packageName": "com.kryonos.calculator",
-  "version": "1.0.1",
+  "version": "1.0.0",
   "metaUrl": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/utilities/Calculator/app.json",
-  "api": 2,
+  "api": 1,
   "author": "KryonOS Team",
   "type": "App",
   "category": "Utility",
