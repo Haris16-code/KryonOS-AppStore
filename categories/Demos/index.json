@@ -1,0 +1,20 @@
+{
+  "apps": {
+    "Cube3d": {
+      "meta": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/Demos/cube3d/app.json",
+      "app": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/Demos/cube3d/main.js"
+    },
+    "Graphic Demo": {
+      "meta": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/Demos/graphic_demo/app.json",
+      "app": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/Demos/graphic_demo/main.js"
+    },
+    "Hello World": {
+      "meta": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/Demos/hello_world/app.json",
+      "app": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/Demos/hello_world/main.js"
+    },
+    "Modern Ui": {
+      "meta": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/Demos/modern_ui/app.json",
+      "app": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/Demos/modern_ui/main.js"
+    }
+  }
+}
