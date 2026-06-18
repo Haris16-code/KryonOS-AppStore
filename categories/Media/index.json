@@ -1,0 +1,8 @@
+{
+  "apps": {
+    "Image Viewer": {
+      "meta": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/Media/image_viewer/app.json",
+      "app": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/Media/image_viewer/main.js"
+    }
+  }
+}
