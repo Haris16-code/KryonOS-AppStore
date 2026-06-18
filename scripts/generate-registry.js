@@ -12,7 +12,6 @@ const rootIndexPath = path.join(__dirname, '..', 'index.json');
 
 const rootRegistry = { categories: {} };
 
-// Helper to format folder names into readable category names (e.g., "advanced_file_manager" -> "Advanced File Manager")
 function formatCategoryName(folderName) {
     return folderName
         .split('_')
@@ -21,30 +20,39 @@ function formatCategoryName(folderName) {
 }
 
 if (fs.existsSync(categoriesDir)) {
-    // Get all folders inside /categories
     const categories = fs.readdirSync(categoriesDir).filter(f => fs.statSync(path.join(categoriesDir, f)).isDirectory());
 
     for (const category of categories) {
         const categoryPath = path.join(categoriesDir, category);
         const categoryApps = { apps: {} };
         
-        // Get all app folders inside the current category
         const apps = fs.readdirSync(categoryPath).filter(f => fs.statSync(path.join(categoryPath, f)).isDirectory());
 
         for (const appDir of apps) {
             const appPath = path.join(categoryPath, appDir);
             const appJsonPath = path.join(appPath, 'app.json');
 
-            // Only register if app.json exists
             if (fs.existsSync(appJsonPath)) {
                 try {
                     const appJson = JSON.parse(fs.readFileSync(appJsonPath, 'utf8'));
-                    const appName = appJson.name; // Extract name from app.json
+                    const appName = appJson.name; 
 
                     // Build the raw GitHub URLs
+                    const metaRawUrl = `${BASE_RAW_URL}/categories/${category}/${appDir}/app.json`;
+                    const appRawUrl = `${BASE_RAW_URL}/categories/${category}/${appDir}/main.js`;
+
+                    // --- NEW FEATURE: Update the app.json file itself ---
+                    if (appJson.metaUrl !== metaRawUrl) {
+                        appJson.metaUrl = metaRawUrl;
+                        // Write the updated JSON back to the app's folder
+                        fs.writeFileSync(appJsonPath, JSON.stringify(appJson, null, 2));
+                        console.log(`Updated metaUrl inside ${category}/${appDir}/app.json`);
+                    }
+                    // ----------------------------------------------------
+
                     categoryApps.apps[appName] = {
-                        meta: `${BASE_RAW_URL}/categories/${category}/${appDir}/app.json`,
-                        app: `${BASE_RAW_URL}/categories/${category}/${appDir}/main.js`
+                        meta: metaRawUrl,
+                        app: appRawUrl
                     };
                 } catch (error) {
                     console.error(`Error parsing ${appJsonPath}:`, error);
@@ -52,15 +60,11 @@ if (fs.existsSync(categoriesDir)) {
             }
         }
 
-        // Write the category's specific index.json
         fs.writeFileSync(path.join(categoryPath, 'index.json'), JSON.stringify(categoryApps, null, 2));
-
-        // Register the category in the root index.json
         const categoryTitle = formatCategoryName(category);
         rootRegistry.categories[categoryTitle] = `${BASE_RAW_URL}/categories/${category}/index.json`;
     }
 }
 
-// Write the root index.json
 fs.writeFileSync(rootIndexPath, JSON.stringify(rootRegistry, null, 2));
-console.log('KryonOS App Store registry successfully updated.');
+console.log('KryonOS App Store registry and app.json files successfully updated.');
