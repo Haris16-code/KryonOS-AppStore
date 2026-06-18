@@ -1,12 +1,12 @@
 {
   "name": "2D Endless Runner",
   "packageName": "com.kryonos.2dendlessrunner",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "metaUrl": "",
   "api": 1,
   "author": "KryonOS Team",
   "type": "Game",
   "category": "Arcade",
   "description": "A fun 2D endless running game.",
-  "changelog": ""
+  "changelog": "Performance Optimizations"
 }
