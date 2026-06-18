@@ -1,9 +1,10 @@
 // 2D Endless Runner
-// Uses Sliced Rendering for 0% Flickering and 60 FPS performance.
+// Uses Sliced Rendering for 0% Flickering
 
 var SW = System.screenWidth();
 var SH = System.screenHeight();
-var SLICE_H = 80; // 4 slices of 80px = 320px height
+var SLICE_H = 32; // Reduced slice height to drastically decrease RAM requirement
+var SLICES = Math.ceil(SH / SLICE_H);
 
 // Allocate Sliced Double Buffer
 if (!System.createSprite(SW, SLICE_H)) {
@@ -310,7 +311,7 @@ while (true) {
     }
 
     // Render Frame (Sliced)
-    for (var slice = 0; slice < 4; slice++) {
+    for (var slice = 0; slice < SLICES; slice++) {
         drawSlice(slice * SLICE_H, dt);
     }
 
