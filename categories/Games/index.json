@@ -1,0 +1,8 @@
+{
+  "apps": {
+    "2D Endless Runner": {
+      "meta": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/Games/2d-endless-runner/app.json",
+      "app": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/Games/2d-endless-runner/main.js"
+    }
+  }
+}
