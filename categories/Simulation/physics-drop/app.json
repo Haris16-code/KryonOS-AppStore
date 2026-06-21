@@ -2,7 +2,7 @@
   "name": "Physics Drop",
   "packageName": "com.kryonos.physicsdrop",
   "version": "1.0.0",
-  "metaUrl": "",
+  "metaUrl": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/Simulation/physics-drop/app.json",
   "author": "KryonOS Team",
   "description": "A Verlet physics sandbox. Draw lines and watch them fall!",
   "type": "Demo",

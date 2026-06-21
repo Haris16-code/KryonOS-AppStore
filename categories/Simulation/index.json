@@ -1,0 +1,8 @@
+{
+  "apps": {
+    "Physics Drop": {
+      "meta": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/Simulation/physics-drop/app.json",
+      "app": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/Simulation/physics-drop/main.js"
+    }
+  }
+}
