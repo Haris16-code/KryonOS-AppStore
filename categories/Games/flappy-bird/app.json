@@ -2,7 +2,7 @@
   "name": "Flappy Bird",
   "packageName": "com.kryonos.flappybird",
   "version": "1.0.0",
-  "metaUrl": "",
+  "metaUrl": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/Games/flappy-bird/app.json",
   "author": "KryonOS Games",
   "description": "Flappy Bird arcade game featuring FastMath physics, Kryon3D acceleration, customizable skins, multiple game modes, sound effects, and high score medals.",
   "type": "Game",
