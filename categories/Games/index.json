@@ -2,15 +2,24 @@
   "apps": {
     "2D Endless Runner": {
       "meta": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/Games/2d-endless-runner/app.json",
-      "app": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/Games/2d-endless-runner/main.js"
+      "app": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/Games/2d-endless-runner/main.js",
+      "meta_sha256": "6d5219729c847349e5c569792eda47848d81bc3f3b266209818c7963a540558e",
+      "app_sha256": "021d08606dcbb0dd9b39be14f1fa6a3f06031b87c702578dfc1190270e33ba53",
+      "api": 1
     },
     "Flappy Bird": {
       "meta": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/Games/flappy-bird/app.json",
-      "app": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/Games/flappy-bird/main.js"
+      "app": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/Games/flappy-bird/main.js",
+      "meta_sha256": "09b9bc681079f09082ebe22546c8867f70002e0bd4f28841e8639fcf4c8674d5",
+      "app_sha256": "dca49fbfa0adb6d91a1cc2d124185338a127c80d23ed202f5cb9b5fa4f227e4b",
+      "api": 2
     },
     "Tictactoe": {
       "meta": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/Games/tictactoe/app.json",
-      "app": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/Games/tictactoe/main.js"
+      "app": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/Games/tictactoe/main.js",
+      "meta_sha256": "f57ccca3985f2429e4f8209c8b59305fc94af6b33c53954dee70fa339ebdb8c5",
+      "app_sha256": "f8119ebcb6de1f682876705ea0bd72a4a2d05dd87e1cfd327cd97be982bf4e6d",
+      "api": 1
     }
   }
 }
