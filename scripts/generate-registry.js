@@ -21,43 +21,25 @@ function formatCategoryName(folderName) {
 }
 
 /**
- * Computes SHA-256 directly from the exact raw byte buffer on disk.
- * Never modifies line endings or trailing characters.
+ * Strips any trailing line breaks (\r or \n) at the end of the file,
+ * normalizes CRLF to LF, writes the clean file back if needed,
+ * and returns the exact SHA-256 hex digest.
  */
-function sha256RawFile(filePath) {
-    if (!fs.existsSync(filePath)) return '';
-    const rawBuffer = fs.readFileSync(filePath);
-    return crypto.createHash('sha256').update(rawBuffer).digest('hex');
-}
-
-/**
- * Writes JSON only if content actually changed, preserving original line endings
- * and whether the file originally ended with a newline.
- */
-function writeJsonIfChanged(filePath, dataObj) {
-    let hadTrailingNewline = false;
-    let useCrLf = false;
-    let existingRaw = null;
-
-    if (fs.existsSync(filePath)) {
-        existingRaw = fs.readFileSync(filePath, 'utf8');
-        hadTrailingNewline = existingRaw.endsWith('\n');
-        useCrLf = existingRaw.includes('\r\n');
+function cleanAndHashFile(filePath) {
+    if (!fs.existsSync(filePath)) {
+        return '';
     }
 
-    let serialized = JSON.stringify(dataObj, null, 2);
-    if (useCrLf) {
-        serialized = serialized.replace(/\n/g, '\r\n');
-    }
-    if (hadTrailingNewline) {
-        serialized += useCrLf ? '\r\n' : '\n';
+    const rawContent = fs.readFileSync(filePath, 'utf8');
+    // Normalize CRLF -> LF and remove trailing line breaks at EOF
+    const cleanedContent = rawContent.replace(/\r\n/g, '\n').replace(/[\r\n]+$/, '');
+
+    // If the file had a trailing newline or CRLF, overwrite it so the repo file matches the hash
+    if (rawContent !== cleanedContent) {
+        fs.writeFileSync(filePath, cleanedContent, 'utf8');
     }
 
-    if (existingRaw !== serialized) {
-        fs.writeFileSync(filePath, Buffer.from(serialized, 'utf8'));
-        return true;
-    }
-    return false;
+    return crypto.createHash('sha256').update(Buffer.from(cleanedContent, 'utf8')).digest('hex');
 }
 
 if (fs.existsSync(categoriesDir)) {
@@ -69,6 +51,7 @@ if (fs.existsSync(categoriesDir)) {
         const categoryPath = path.join(categoriesDir, category);
         const categoryIndexPath = path.join(categoryPath, 'index.json');
 
+        // Load existing category index.json to preserve custom fields (e.g., "api": 1)
         let existingCategoryData = { apps: {} };
         if (fs.existsSync(categoryIndexPath)) {
             try {
@@ -82,6 +65,7 @@ if (fs.existsSync(categoriesDir)) {
         }
 
         const categoryApps = { apps: {} };
+
         const apps = fs.readdirSync(categoryPath).filter(f =>
             fs.statSync(path.join(categoryPath, f)).isDirectory()
         );
@@ -96,20 +80,19 @@ if (fs.existsSync(categoriesDir)) {
                     const appJson = JSON.parse(fs.readFileSync(appJsonPath, 'utf8'));
                     const appName = appJson.name;
 
+                    // Build the raw GitHub URLs
                     const metaRawUrl = `${BASE_RAW_URL}/categories/${category}/${appDir}/app.json`;
                     const appRawUrl = `${BASE_RAW_URL}/categories/${category}/${appDir}/main.js`;
 
-                    // Only rewrite app.json if metaUrl is missing or different
-                    if (appJson.metaUrl !== metaRawUrl) {
-                        appJson.metaUrl = metaRawUrl;
-                        writeJsonIfChanged(appJsonPath, appJson);
-                        console.log(`Updated metaUrl inside ${category}/${appDir}/app.json`);
-                    }
+                    // Update metaUrl in app.json and write without trailing newline
+                    appJson.metaUrl = metaRawUrl;
+                    fs.writeFileSync(appJsonPath, JSON.stringify(appJson, null, 2), 'utf8');
 
-                    // Hash exact raw bytes on disk AFTER any update
-                    const metaSha256 = sha256RawFile(appJsonPath);
-                    const appSha256 = sha256RawFile(mainJsPath);
+                    // Clean trailing newlines and compute SHA-256 for both app.json and main.js
+                    const metaSha256 = cleanAndHashFile(appJsonPath);
+                    const appSha256 = cleanAndHashFile(mainJsPath);
 
+                    // Preserve any existing extra properties (like "api": 1)
                     const previousEntry = existingCategoryData.apps[appName] || {};
                     const updatedEntry = {
                         ...previousEntry,
@@ -125,16 +108,16 @@ if (fs.existsSync(categoriesDir)) {
 
                     categoryApps.apps[appName] = updatedEntry;
                 } catch (error) {
-                    console.error(`Error processing ${appJsonPath}:`, error);
+                    console.error(`Error parsing ${appJsonPath}:`, error);
                 }
             }
         }
 
-        writeJsonIfChanged(categoryIndexPath, categoryApps);
+        fs.writeFileSync(categoryIndexPath, JSON.stringify(categoryApps, null, 2), 'utf8');
         const categoryTitle = formatCategoryName(category);
         rootRegistry.categories[categoryTitle] = `${BASE_RAW_URL}/categories/${category}/index.json`;
     }
 }
 
-writeJsonIfChanged(rootIndexPath, rootRegistry);
-console.log('KryonOS App Store registry and SHA-256 hashes updated');
+fs.writeFileSync(rootIndexPath, JSON.stringify(rootRegistry, null, 2), 'utf8');
+console.log('KryonOS App Store registry, app.json, main.js, and SHA-256 hashes successfully updated.');
