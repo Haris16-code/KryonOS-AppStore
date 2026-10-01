@@ -1,4 +1,4 @@
-// HarixOS Tic-Tac-Toe Game
+// KryonOS Tic-Tac-Toe Game
 // Play against a Bot!
 
 var SW = System.screenWidth();
