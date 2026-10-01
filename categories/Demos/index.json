@@ -4,28 +4,28 @@
       "meta": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/Demos/cube3d/app.json",
       "app": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/Demos/cube3d/main.js",
       "meta_sha256": "e612a77ba5897006d8b93e30b9ce7658d2227482e7fa708d3e4acf1e768de5d5",
-      "app_sha256": "2a7d2a3e36df694bd7a3966f242be473ce057c5fb0fc761fe05d14dc7f78be44",
+      "app_sha256": "d1e200bb6254217a5e1d5d7ae295f88fc6d83af96f4b594449cbc00a27d36c8a",
       "api": 1
     },
     "Graphic Demo": {
       "meta": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/Demos/graphic_demo/app.json",
       "app": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/Demos/graphic_demo/main.js",
       "meta_sha256": "5ff4d2debaff0341d09ed4094b2a3c2b2fa2e8ef9d116745fd972c7df069814b",
-      "app_sha256": "7b290efb1d5c8cf89709fe8e5ecbf6fb4f1f467deb397676f63c3ffe9d022215",
+      "app_sha256": "d3cfaa07a4c41013e0c50b3268d223f875faad4e88aa5326741ef622dda6fb4c",
       "api": 1
     },
     "Hello World": {
       "meta": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/Demos/hello_world/app.json",
       "app": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/Demos/hello_world/main.js",
       "meta_sha256": "e41dae7397c8e5b93b90739774f04bf7f60e2e24015d519b8a55361d9666caea",
-      "app_sha256": "c491b13954104a04c9d9ea82128326d8285e618467ab25d097848f49a2740f65",
+      "app_sha256": "4fd167b794be1683e15e79fa032ab030313bdfbe867b7989dd59766417801c52",
       "api": 1
     },
     "Modern Ui": {
       "meta": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/Demos/modern_ui/app.json",
       "app": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/Demos/modern_ui/main.js",
       "meta_sha256": "a9538a86f74fb75f634ff8d129c5bf06d388d57eac7fb28f669b5dab7138a52f",
-      "app_sha256": "f1b645a947429e6937b482accf342fac89f80bd98dbb8bec2ef508565adc280d",
+      "app_sha256": "43008738c47db5e4e004d8343b1ee544508daf411f155d9c4fce4e12cf5cf129",
       "api": 1
     }
   }
