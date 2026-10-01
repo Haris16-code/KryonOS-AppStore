@@ -5,7 +5,8 @@ on:
     branches:
       - main
     paths:
-      - 'categories/**' # Only run when changes happen inside the categories folder
+      - 'categories/**' # Run when changes happen inside the categories folder
+      - 'scripts/generate-registry.js' # Run when the generator script itself is updated
   workflow_dispatch: # Allows you to run it manually from the Actions tab
 
 permissions:
@@ -32,13 +33,13 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           
-          # Add the root index.json and EVERYTHING modified inside the categories folder (including app.json files)
+          # Add the root index.json and EVERYTHING modified inside the categories folder (including app.json & index.json files)
           git add index.json categories/
           
           # Check if there are actual changes to commit
           if git diff --staged --quiet; then
-            echo "No changes to the registry or app files detected."
+            echo "No changes to the registry, hashes, or app files detected."
           else
-            git commit -m "chore: auto-update OS app registry and app metaUrls"
+            git commit -m "chore: auto-update OS app registry, metaUrls, and SHA-256 hashes"
             git push
           fi
