@@ -5,9 +5,9 @@ on:
     branches:
       - main
     paths:
-      - 'categories/**' # Run when changes happen inside the categories folder
-      - 'scripts/generate-registry.js' # Run when the generator script itself is updated
-  workflow_dispatch: # Allows you to run it manually from the Actions tab
+      - 'categories/**'
+      - 'scripts/generate-registry.js'
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -17,8 +17,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Repository
+      - name: Checkout Repository (Exact Raw Bytes)
         uses: actions/checkout@v4
+
+      - name: Disable Git Line-Ending Mutation
+        run: |
+          git config --global core.autocrlf false
+          git config --global core.eol lf
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -33,13 +38,11 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           
-          # Add the root index.json and EVERYTHING modified inside the categories folder (including app.json & index.json files)
           git add index.json categories/
           
-          # Check if there are actual changes to commit
           if git diff --staged --quiet; then
-            echo "No changes to the registry, hashes, or app files detected."
+            echo "No changes to the registry or hashes detected."
           else
-            git commit -m "chore: auto-update OS app registry, metaUrls, and SHA-256 hashes"
+            git commit -m "chore: auto-update OS app registry and SHA-256 hashes"
             git push
           fi
