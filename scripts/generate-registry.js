@@ -21,14 +21,43 @@ function formatCategoryName(folderName) {
 }
 
 /**
- * Calculates the exact lowercase hex SHA-256 hash of a file's raw bytes.
+ * Computes SHA-256 directly from the exact raw byte buffer on disk.
+ * Never modifies line endings or trailing characters.
  */
-function calculateFileSha256(filePath) {
-    if (!fs.existsSync(filePath)) {
-        return '';
+function sha256RawFile(filePath) {
+    if (!fs.existsSync(filePath)) return '';
+    const rawBuffer = fs.readFileSync(filePath);
+    return crypto.createHash('sha256').update(rawBuffer).digest('hex');
+}
+
+/**
+ * Writes JSON only if content actually changed, preserving original line endings
+ * and whether the file originally ended with a newline.
+ */
+function writeJsonIfChanged(filePath, dataObj) {
+    let hadTrailingNewline = false;
+    let useCrLf = false;
+    let existingRaw = null;
+
+    if (fs.existsSync(filePath)) {
+        existingRaw = fs.readFileSync(filePath, 'utf8');
+        hadTrailingNewline = existingRaw.endsWith('\n');
+        useCrLf = existingRaw.includes('\r\n');
     }
-    const fileBuffer = fs.readFileSync(filePath);
-    return crypto.createHash('sha256').update(fileBuffer).digest('hex');
+
+    let serialized = JSON.stringify(dataObj, null, 2);
+    if (useCrLf) {
+        serialized = serialized.replace(/\n/g, '\r\n');
+    }
+    if (hadTrailingNewline) {
+        serialized += useCrLf ? '\r\n' : '\n';
+    }
+
+    if (existingRaw !== serialized) {
+        fs.writeFileSync(filePath, Buffer.from(serialized, 'utf8'));
+        return true;
+    }
+    return false;
 }
 
 if (fs.existsSync(categoriesDir)) {
@@ -40,7 +69,6 @@ if (fs.existsSync(categoriesDir)) {
         const categoryPath = path.join(categoriesDir, category);
         const categoryIndexPath = path.join(categoryPath, 'index.json');
 
-        // Load existing category index.json if present to preserve any extra keys (e.g., "api": 1)
         let existingCategoryData = { apps: {} };
         if (fs.existsSync(categoryIndexPath)) {
             try {
@@ -48,14 +76,12 @@ if (fs.existsSync(categoriesDir)) {
                 if (!existingCategoryData.apps || typeof existingCategoryData.apps !== 'object') {
                     existingCategoryData.apps = {};
                 }
-            } catch (err) {
-                console.warn(`Could not parse existing ${categoryIndexPath}, rebuilding fresh.`);
+            } catch {
                 existingCategoryData = { apps: {} };
             }
         }
 
         const categoryApps = { apps: {} };
-
         const apps = fs.readdirSync(categoryPath).filter(f =>
             fs.statSync(path.join(categoryPath, f)).isDirectory()
         );
@@ -70,28 +96,21 @@ if (fs.existsSync(categoriesDir)) {
                     const appJson = JSON.parse(fs.readFileSync(appJsonPath, 'utf8'));
                     const appName = appJson.name;
 
-                    // Build the raw GitHub URLs
                     const metaRawUrl = `${BASE_RAW_URL}/categories/${category}/${appDir}/app.json`;
                     const appRawUrl = `${BASE_RAW_URL}/categories/${category}/${appDir}/main.js`;
 
-                    // 1. Update app.json first if metaUrl changed (so the hash reflects the final file)
+                    // Only rewrite app.json if metaUrl is missing or different
                     if (appJson.metaUrl !== metaRawUrl) {
                         appJson.metaUrl = metaRawUrl;
-                        fs.writeFileSync(appJsonPath, JSON.stringify(appJson, null, 2));
+                        writeJsonIfChanged(appJsonPath, appJson);
                         console.log(`Updated metaUrl inside ${category}/${appDir}/app.json`);
                     }
 
-                    // 2. Calculate SHA-256 hashes for both app.json and main.js
-                    const metaSha256 = calculateFileSha256(appJsonPath);
-                    const appSha256 = calculateFileSha256(mainJsPath);
+                    // Hash exact raw bytes on disk AFTER any update
+                    const metaSha256 = sha256RawFile(appJsonPath);
+                    const appSha256 = sha256RawFile(mainJsPath);
 
-                    if (!appSha256) {
-                        console.warn(`Warning: main.js missing in ${category}/${appDir}`);
-                    }
-
-                    // 3. Preserve any existing fields (such as "api") on this app entry
                     const previousEntry = existingCategoryData.apps[appName] || {};
-
                     const updatedEntry = {
                         ...previousEntry,
                         meta: metaRawUrl,
@@ -100,23 +119,22 @@ if (fs.existsSync(categoriesDir)) {
                         app_sha256: appSha256
                     };
 
-                    // If app.json defines an "api" field and it wasn't set yet, preserve it
                     if (appJson.api !== undefined && updatedEntry.api === undefined) {
                         updatedEntry.api = appJson.api;
                     }
 
                     categoryApps.apps[appName] = updatedEntry;
                 } catch (error) {
-                    console.error(`Error parsing ${appJsonPath}:`, error);
+                    console.error(`Error processing ${appJsonPath}:`, error);
                 }
             }
         }
 
-        fs.writeFileSync(categoryIndexPath, JSON.stringify(categoryApps, null, 2));
+        writeJsonIfChanged(categoryIndexPath, categoryApps);
         const categoryTitle = formatCategoryName(category);
         rootRegistry.categories[categoryTitle] = `${BASE_RAW_URL}/categories/${category}/index.json`;
     }
 }
 
-fs.writeFileSync(rootIndexPath, JSON.stringify(rootRegistry, null, 2));
-console.log('KryonOS App Store registry, app.json files, and SHA-256 hashes successfully updated.');
+writeJsonIfChanged(rootIndexPath, rootRegistry);
+console.log('KryonOS App Store registry and SHA-256 hashes updated');
