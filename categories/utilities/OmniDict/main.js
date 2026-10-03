@@ -2,7 +2,7 @@
 // OmniDict — Universal Master Dictionary with Online Pack Downloader
 // ============================================================================
 
-(function() {
+
     var SCREEN_W = System.screenWidth();
     var SCREEN_H = System.screenHeight();
 
@@ -640,4 +640,4 @@
     }
 
     System.fillScreen(C_BG);
-})();
+
