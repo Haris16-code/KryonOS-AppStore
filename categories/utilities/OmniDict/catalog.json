@@ -1,0 +1,31 @@
+{
+  "packs": [
+    {
+      "id": "en_bn",
+      "name": "English to Bengali",
+      "from": "EN",
+      "to": "BN",
+      "size": "28 KB",
+      "words": 1200,
+      "url": "https://raw.githubusercontent.com/YourUsername/KryonOS-Dicts/main/en_bn.json"
+    },
+    {
+      "id": "en_es",
+      "name": "English to Spanish",
+      "from": "EN",
+      "to": "ES",
+      "size": "35 KB",
+      "words": 1500,
+      "url": "https://raw.githubusercontent.com/YourUsername/KryonOS-Dicts/main/en_es.json"
+    },
+    {
+      "id": "en_ar",
+      "name": "English to Arabic",
+      "from": "EN",
+      "to": "AR",
+      "size": "32 KB",
+      "words": 1350,
+      "url": "https://raw.githubusercontent.com/YourUsername/KryonOS-Dicts/main/en_ar.json"
+    }
+  ]
+}
