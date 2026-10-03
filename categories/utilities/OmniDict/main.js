@@ -16,7 +16,7 @@
     var isRunning = true;
 
     // Master API Catalog URL (Change this to your actual GitHub/API URL)
-    var CATALOG_URL = "https://raw.githubusercontent.com/Haris16-code/KryonOS/refs/heads/main/dicts/catalog.json";
+    var CATALOG_URL = "https://raw.githubusercontent.com/shifat100/KryonOS-DOC/refs/heads/main/storage/omnidict/catalog.json";
 
     // Storage Paths
     var DICT_DIR = "dicts/";
