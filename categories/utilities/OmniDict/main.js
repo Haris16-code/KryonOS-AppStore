@@ -16,7 +16,7 @@ var currentTab = TAB_SEARCH;
 var isRunning = true;
 
 // Master API Catalog URL (Your exact GitHub Raw URL)
-var CATALOG_URL = "https://raw.githubusercontent.com/shifat100/KryonOS-DOC/main/storage/omnidict/catalog.json";
+var CATALOG_URL = "https://raw.githubusercontent.com/shifat100/KryonOS-Web/refs/heads/main/storage/omnidict/catalog.json";
 
 // Storage Paths
 var DICT_DIR = "dicts/";
