@@ -1,10 +1,10 @@
 // ============================================================================
-// OmniDict — Universal Master Dictionary with Online Pack Downloader
-// Fully Fixed & Tested for KryonOS & Web Emulator
+// OmniDict — Universal Master Dictionary for KryonOS
+// Auto-Fetch Online Catalog & Dynamic Pack Installer
 // ============================================================================
 
-var SCREEN_W = System.screenWidth();
-var SCREEN_H = System.screenHeight();
+var SCREEN_W = System.screenWidth() || 240;
+var SCREEN_H = System.screenHeight() || 320;
 
 // App Navigation States
 var TAB_SEARCH   = 0;
@@ -15,16 +15,15 @@ var STATE_DETAIL = 3;
 var currentTab = TAB_SEARCH;
 var isRunning = true;
 
-// Master API Catalog URL
-var CATALOG_URL = "https://raw.githubusercontent.com/shifat100/KryonOS-DOC/refs/heads/main/storage/omnidict/catalog.json";
+// Master API Catalog URL (Your exact GitHub Raw URL)
+var CATALOG_URL = "https://raw.githubusercontent.com/shifat100/KryonOS-DOC/main/storage/omnidict/catalog.json";
 
 // Storage Paths
 var DICT_DIR = "dicts/";
 var ACTIVE_CONF = "active_dict.txt";
 
 // Active Dictionary State
-var activeDictId = "en_bn";
-var activeDictName = "English to Bengali";
+var activeDictId = "default";
 var activeDictData = {};
 
 // Search Engine Variables
@@ -39,24 +38,45 @@ var selectedDesc = "";
 var onlinePacks = [];
 var catalogLoaded = false;
 var isDownloading = false;
-var downloadProgress = 0;
 var packFilter = "";
 var downloadStatusMsg = "";
 
 // Local Installed Packs Cache
 var localPacks = [];
 
-// Strict 16-Bit RGB565 Colors (No 24-bit color bugs)
+// Strict 16-Bit RGB565 Colors
 var C_BG     = 0x0000; // Deep Black
 var C_PANEL  = 0x18E3; // Dark Slate Navy
 var C_BORDER = 0x39E7; // Subtle Border
 var C_ACCENT = 0x03D9; // 16-bit #007ACC Blue
 var C_WHITE  = 0xFFFF;
-var C_MUTED  = 0xC618;
+var C_MUTED  = 0x8410;
 var C_YELLOW = 0xFFE0;
 var C_GREEN  = 0x07E0;
 var C_RED    = 0xF800;
 var C_CYAN   = 0x07FF;
+
+// ------------------------------------------------------------------------
+// Dual Network Handler (Emulator Promise + ESP32 Sync Support)
+// ------------------------------------------------------------------------
+function fetchUrl(url, callback) {
+    try {
+        var res = Network.get(url);
+        if (res && typeof res.then === "function") {
+            // Browser Emulator Async Promise
+            res.then(function(realRes) {
+                callback(realRes);
+            })["catch"](function(err) {
+                callback({ status: 0, error: String(err) });
+            });
+        } else {
+            // Real ESP32 Synchronous
+            callback(res);
+        }
+    } catch(e) {
+        callback({ status: 0, error: String(e) });
+    }
+}
 
 // ------------------------------------------------------------------------
 // Initialization & Storage Operations
@@ -66,33 +86,20 @@ function init() {
         FS.mkdir(DICT_DIR);
     }
 
-    // 1. Create a default offline starter pack so dictionary is never empty
-    var defaultPath = DICT_DIR + "en_bn.json";
-    if (!FS.exists(defaultPath)) {
+    // Starter pack (named 'default.json' so it never conflicts with 'en_bn.json')
+    var starterPath = DICT_DIR + "default.json";
+    if (!FS.exists(starterPath)) {
         var starterData = {
-            "apple": "আপেল (এক প্রকার মিষ্টি ফল)",
-            "action": {
-                "meaning": "কাজ বা পদক্ষেপ",
-                "desc": "Action speaks louder than words"
-            },
-            "book": "বই, পুস্তক বা গ্রন্থ",
-            "computer": {
-                "meaning": "গণকযন্ত্র বা কম্পিউটার",
-                "desc": "Electronic device for data computation"
-            },
-            "device": "যন্ত্র বা কৌশল",
+            "apple": "আপেল (ফল)",
+            "book": "বই বা পুস্তক",
+            "computer": "কম্পিউটার বা গণকযন্ত্র",
             "hello": "নমস্কার বা হ্যালো",
-            "kryonos": {
-                "meaning": "একটি শক্তিশালী এমবেডেড ওএস",
-                "desc": "ESP32 Operating System"
-            },
-            "search": "অনুসন্ধান করা বা খোঁজা",
-            "welcome": "স্বাগতম বা শুভকামনা"
+            "kryonos": "একটি শক্তিশালী এমবেডেড ওএস"
         };
-        FS.writeTextFile(defaultPath, JSON.stringify(starterData));
+        FS.writeTextFile(starterPath, JSON.stringify(starterData));
     }
 
-    // 2. Load active dict ID from storage
+    // Load active dict ID from storage
     if (FS.exists(ACTIVE_CONF)) {
         var saved = FS.readTextFile(ACTIVE_CONF);
         if (saved && saved.trim().length > 0) {
@@ -120,21 +127,23 @@ function scanLocalPacks() {
             }
         }
     }
+    if (!activeDictId || localPacks.indexOf(activeDictId) === -1) {
+        activeDictId = (localPacks.length > 0) ? localPacks[0] : "default";
+    }
 }
 
 function loadActiveDictionary() {
+    if (!activeDictId) activeDictId = "default";
     var filePath = DICT_DIR + activeDictId + ".json";
     if (FS.exists(filePath)) {
         try {
             var content = FS.readTextFile(filePath);
             activeDictData = JSON.parse(content) || {};
-            activeDictName = activeDictId.toUpperCase().replace("_", " -> ");
         } catch(e) {
             activeDictData = {};
         }
     } else {
         activeDictData = {};
-        activeDictName = "No Pack Selected";
     }
     performSearch(searchQuery);
 }
@@ -176,31 +185,37 @@ function performSearch(query) {
 }
 
 // ------------------------------------------------------------------------
-// Online Download Logic
+// Online Catalog & Download Logic
 // ------------------------------------------------------------------------
 function fetchOnlineCatalog() {
     if (!Network.isConnected()) {
         Network.showWiFiPrompt();
-        downloadStatusMsg = "Please connect WiFi first!";
+        downloadStatusMsg = "WiFi not connected!";
+        render();
         return;
     }
 
-    downloadStatusMsg = "Fetching available languages...";
+    downloadStatusMsg = "Loading Catalog from GitHub...";
     render();
 
-    var res = Network.get(CATALOG_URL);
-    if (res && res.status === 200 && res.body) {
-        try {
-            var parsed = JSON.parse(res.body);
-            onlinePacks = parsed.packs || [];
-            catalogLoaded = true;
-            downloadStatusMsg = "";
-        } catch(e) {
-            downloadStatusMsg = "Failed to parse catalog JSON!";
+    fetchUrl(CATALOG_URL, function(res) {
+        var status = (res && typeof res.status !== "undefined") ? res.status : ((res && res.statusCode) || 0);
+        var body = (res && res.body) ? res.body : ((res && res.data) || "");
+
+        if (status === 200 && body) {
+            try {
+                var parsed = JSON.parse(body);
+                onlinePacks = parsed.packs || [];
+                catalogLoaded = true;
+                downloadStatusMsg = "";
+            } catch(e) {
+                downloadStatusMsg = "Catalog format error!";
+            }
+        } else {
+            downloadStatusMsg = "Catalog fetch failed (HTTP " + status + ")";
         }
-    } else {
-        downloadStatusMsg = "Catalog fetch failed (" + (res ? res.status : "Err") + ")";
-    }
+        render();
+    });
 }
 
 function downloadPack(pack) {
@@ -210,32 +225,39 @@ function downloadPack(pack) {
     }
 
     isDownloading = true;
-    downloadProgress = 0;
     downloadStatusMsg = "Downloading " + pack.name + "...";
     render();
 
     var targetFile = DICT_DIR + pack.id + ".json";
 
-    // Direct sandbox-safe download via Network.get & FS.writeTextFile
-    var res = Network.get(pack.url);
-    if (res && res.status === 200 && res.body && res.body.length > 2) {
-        try {
-            JSON.parse(res.body); // Validate JSON format
-            FS.writeTextFile(targetFile, res.body);
-            scanLocalPacks();
-            downloadStatusMsg = "Downloaded " + pack.id + "!";
-            if (System.notify) {
-                System.notify("Downloaded", pack.name + " ready!", "success", 2000);
-            }
-        } catch(e) {
-            downloadStatusMsg = "Invalid JSON data from URL!";
-        }
-    } else {
-        downloadStatusMsg = "Download Failed!";
-    }
+    fetchUrl(pack.url, function(res) {
+        isDownloading = false;
+        var status = (res && typeof res.status !== "undefined") ? res.status : ((res && res.statusCode) || 0);
+        var body = (res && res.body) ? res.body : ((res && res.data) || "");
 
-    isDownloading = false;
-    render();
+        if (status === 200 && body && body.length > 2) {
+            try {
+                JSON.parse(body); // Validate JSON format
+                FS.writeTextFile(targetFile, body);
+                scanLocalPacks();
+
+                // Automatically activate newly downloaded language
+                activeDictId = pack.id;
+                FS.writeTextFile(ACTIVE_CONF, activeDictId);
+                loadActiveDictionary();
+
+                downloadStatusMsg = pack.name + " installed & activated!";
+                if (System.notify) {
+                    System.notify("Downloaded", pack.name + " activated!", "success", 2500);
+                }
+            } catch(e) {
+                downloadStatusMsg = "Invalid JSON file from server!";
+            }
+        } else {
+            downloadStatusMsg = "Download failed (HTTP " + status + ")";
+        }
+        render();
+    });
 }
 
 // ------------------------------------------------------------------------
@@ -246,16 +268,16 @@ function drawTopBar() {
     System.drawLine(0, 32, SCREEN_W, 32, C_BORDER);
 
     System.setTextColor(C_WHITE, C_PANEL);
-    System.drawString("OmniDict", 10, 8, 2);
+    System.drawString("OmniDict", 16, 8, 2);
 
     System.setTextColor(C_GREEN, C_PANEL);
-    var tag = "[" + activeDictId.toUpperCase() + "]";
-    System.drawString(tag, 95, 8, 2);
+    var tag = "[" + (activeDictId || "DEFAULT").toUpperCase() + "]";
+    System.drawString(tag, 105, 8, 2);
 
     // Exit [X]
-    System.fillRect(205, 3, 30, 26, C_RED);
+    System.fillRect(SCREEN_W - 35, 3, 30, 26, C_RED);
     System.setTextColor(C_WHITE, C_RED);
-    System.drawString("X", 215, 8, 2);
+    System.drawString("X", SCREEN_W - 25, 8, 2);
 }
 
 function drawTabBar() {
@@ -264,7 +286,7 @@ function drawTabBar() {
     var tabs = [
         { id: TAB_SEARCH, label: "Search" },
         { id: TAB_LOCAL,  label: "Packs" },
-        { id: TAB_DOWNLOAD, label: "Download" }
+        { id: TAB_DOWNLOAD, label: "Online" }
     ];
 
     var tabW = Math.floor(SCREEN_W / tabs.length);
@@ -279,7 +301,7 @@ function drawTabBar() {
             System.fillRoundRect(tx + 2, 35, tabW - 4, 26, 3, C_PANEL);
             System.setTextColor(C_MUTED, C_PANEL);
         }
-        System.drawString(tabs[i].label, tx + 14, 40, 2);
+        System.drawString(tabs[i].label, tx + 12, 40, 2);
     }
 }
 
@@ -287,21 +309,21 @@ function drawSearchTab() {
     System.fillRect(0, 66, SCREEN_W, SCREEN_H - 66, C_BG);
 
     // Search Bar Box
-    System.fillRoundRect(8, 70, SCREEN_W - 16, 34, 4, C_PANEL);
-    System.drawRoundRect(8, 70, SCREEN_W - 16, 34, 4, C_ACCENT);
+    System.fillRoundRect(12, 70, SCREEN_W - 24, 34, 4, C_PANEL);
+    System.drawRoundRect(12, 70, SCREEN_W - 24, 34, 4, C_ACCENT);
 
     System.setTextColor(C_YELLOW, C_PANEL);
-    System.drawString("Q:", 16, 78, 2);
+    System.drawString("Q:", 18, 78, 2);
 
     System.setTextColor(searchQuery ? C_WHITE : C_MUTED, C_PANEL);
-    var qDisplay = searchQuery ? searchQuery : "Tap here to search word...";
-    if (qDisplay.length > 20) qDisplay = qDisplay.substring(0, 18) + "..";
-    System.drawString(qDisplay, 38, 78, 2);
+    var qDisplay = searchQuery ? searchQuery : "Tap to search word...";
+    if (qDisplay.length > 18) qDisplay = qDisplay.substring(0, 16) + "..";
+    System.drawString(qDisplay, 40, 78, 2);
 
     if (searchQuery) {
-        System.fillRect(200, 75, 20, 24, C_RED);
+        System.fillRect(SCREEN_W - 40, 75, 22, 24, C_RED);
         System.setTextColor(C_WHITE, C_RED);
-        System.drawString("x", 206, 78, 2);
+        System.drawString("x", SCREEN_W - 34, 78, 2);
     }
 
     var startY = 112;
@@ -310,7 +332,7 @@ function drawSearchTab() {
 
     if (searchResults.length === 0) {
         System.setTextColor(C_MUTED, C_BG);
-        System.drawString(searchQuery ? "No matching words found." : "Type a word or select pack.", 14, 150, 2);
+        System.drawString(searchQuery ? "No matching words found." : "Type a word or select pack.", 16, 150, 2);
         return;
     }
 
@@ -321,65 +343,65 @@ function drawSearchTab() {
         var item = searchResults[idx];
         var curY = startY + (i * itemH);
 
-        System.fillRoundRect(8, curY, SCREEN_W - 16, itemH - 4, 4, C_PANEL);
-        System.drawRoundRect(8, curY, SCREEN_W - 16, itemH - 4, 4, C_BORDER);
+        System.fillRoundRect(12, curY, SCREEN_W - 24, itemH - 4, 4, C_PANEL);
+        System.drawRoundRect(12, curY, SCREEN_W - 24, itemH - 4, 4, C_BORDER);
 
         System.setTextColor(C_YELLOW, C_PANEL);
-        System.drawString(item.word, 14, curY + 4, 2);
+        System.drawString(item.word, 18, curY + 4, 2);
 
         System.setTextColor(C_WHITE, C_PANEL);
         var m = item.meaning;
-        if (m.length > 26) m = m.substring(0, 24) + "..";
-        System.drawString(m, 14, curY + 20, 1);
+        if (m.length > 24) m = m.substring(0, 22) + "..";
+        System.drawString(m, 18, curY + 20, 1);
     }
 
     // Scroll Buttons
     if (searchResults.length > maxVis) {
-        System.fillRoundRect(8, 276, 105, 30, 4, (scrollOffset > 0) ? C_ACCENT : C_PANEL);
+        System.fillRoundRect(12, 276, 100, 30, 4, (scrollOffset > 0) ? C_ACCENT : C_PANEL);
         System.setTextColor(C_WHITE, (scrollOffset > 0) ? C_ACCENT : C_PANEL);
-        System.drawString("< UP", 40, 283, 2);
+        System.drawString("< UP", 42, 283, 2);
 
         var canDown = (scrollOffset + maxVis < searchResults.length);
-        System.fillRoundRect(127, 276, 105, 30, 4, canDown ? C_ACCENT : C_PANEL);
+        System.fillRoundRect(SCREEN_W - 112, 276, 100, 30, 4, canDown ? C_ACCENT : C_PANEL);
         System.setTextColor(C_WHITE, canDown ? C_ACCENT : C_PANEL);
-        System.drawString("DN >", 165, 283, 2);
+        System.drawString("DN >", SCREEN_W - 75, 283, 2);
     }
 }
 
 function drawWordDetail() {
     System.fillRect(0, 66, SCREEN_W, SCREEN_H - 66, C_BG);
 
-    System.fillRoundRect(8, 70, SCREEN_W - 16, 205, 5, C_PANEL);
-    System.drawRoundRect(8, 70, SCREEN_W - 16, 205, 5, C_BORDER);
+    System.fillRoundRect(12, 70, SCREEN_W - 24, 205, 5, C_PANEL);
+    System.drawRoundRect(12, 70, SCREEN_W - 24, 205, 5, C_BORDER);
 
     if (!selectedWord) return;
 
     System.setTextColor(C_YELLOW, C_PANEL);
     var fSize = (selectedWord.length > 10) ? 2 : 4;
-    System.drawString(selectedWord.toUpperCase(), 16, 78, fSize);
+    System.drawString(selectedWord.toUpperCase(), 18, 78, fSize);
 
     var y = 114;
     System.setTextColor(C_GREEN, C_PANEL);
-    System.drawString("Meaning:", 16, y, 2);
+    System.drawString("Meaning:", 18, y, 2);
     y += 20;
 
     System.setTextColor(C_WHITE, C_PANEL);
     var mLines = wrapText(selectedMeaning || "No meaning provided", 26);
     for (var i = 0; i < mLines.length && i < 3; i++) {
-        System.drawString(mLines[i], 16, y, 2);
+        System.drawString(mLines[i], 18, y, 2);
         y += 18;
     }
 
     if (selectedDesc && selectedDesc.length > 0) {
         y += 6;
         System.setTextColor(C_CYAN, C_PANEL);
-        System.drawString("Description:", 16, y, 1);
+        System.drawString("Description:", 18, y, 1);
         y += 14;
 
         System.setTextColor(C_MUTED, C_PANEL);
         var dLines = wrapText(selectedDesc, 30);
         for (var d = 0; d < dLines.length && d < 2; d++) {
-            System.drawString(dLines[d], 16, y, 1);
+            System.drawString(dLines[d], 18, y, 1);
             y += 14;
         }
     }
@@ -394,12 +416,12 @@ function drawLocalTab() {
     System.fillRect(0, 66, SCREEN_W, SCREEN_H - 66, C_BG);
 
     System.setTextColor(C_WHITE, C_BG);
-    System.drawString("Installed Language Files", 12, 72, 2);
+    System.drawString("Installed Language Files", 16, 72, 2);
 
     if (localPacks.length === 0) {
         System.setTextColor(C_MUTED, C_BG);
         System.drawString("No files in dicts/", 20, 130, 2);
-        System.drawString("Tap 'Download' tab to get packs.", 20, 155, 1);
+        System.drawString("Tap 'Online' tab to get packs.", 20, 155, 1);
         return;
     }
 
@@ -411,43 +433,48 @@ function drawLocalTab() {
         var isAct = (pid === activeDictId);
         var curY = startY + (i * itemH);
 
-        System.fillRoundRect(8, curY, SCREEN_W - 16, itemH - 4, 4, isAct ? 0x02E0 : C_PANEL);
-        System.drawRoundRect(8, curY, SCREEN_W - 16, itemH - 4, 4, isAct ? C_GREEN : C_BORDER);
+        System.fillRoundRect(12, curY, SCREEN_W - 24, itemH - 4, 4, isAct ? 0x02E0 : C_PANEL);
+        System.drawRoundRect(12, curY, SCREEN_W - 24, itemH - 4, 4, isAct ? C_GREEN : C_BORDER);
 
         System.setTextColor(C_WHITE, isAct ? 0x02E0 : C_PANEL);
-        System.drawString(pid + ".json", 16, curY + 6, 2);
+        System.drawString(pid + ".json", 18, curY + 6, 2);
 
         System.setTextColor(isAct ? C_YELLOW : C_MUTED, isAct ? 0x02E0 : C_PANEL);
-        System.drawString(isAct ? "[ACTIVE PACK]" : "Tap to activate", 16, curY + 22, 1);
+        System.drawString(isAct ? "[ACTIVE PACK]" : "Tap to activate", 18, curY + 22, 1);
 
-        // Delete button
-        System.fillRoundRect(180, curY + 6, 44, 26, 3, C_RED);
-        System.setTextColor(C_WHITE, C_RED);
-        System.drawString("Del", 192, curY + 11, 2);
+        // Delete button (Prevent deleting the only remaining pack)
+        if (localPacks.length > 1) {
+            System.fillRoundRect(SCREEN_W - 55, curY + 6, 40, 26, 3, C_RED);
+            System.setTextColor(C_WHITE, C_RED);
+            System.drawString("Del", SCREEN_W - 46, curY + 11, 2);
+        }
     }
 }
 
 function drawDownloadTab() {
     System.fillRect(0, 66, SCREEN_W, SCREEN_H - 66, C_BG);
 
-    // Filter / Refresh Bar
-    System.fillRoundRect(8, 70, 150, 30, 4, C_PANEL);
-    System.drawRoundRect(8, 70, 150, 30, 4, C_BORDER);
+    // Filter Bar & Refresh Button
+    System.fillRoundRect(12, 70, 135, 30, 4, C_PANEL);
+    System.drawRoundRect(12, 70, 135, 30, 4, C_BORDER);
     System.setTextColor(packFilter ? C_WHITE : C_MUTED, C_PANEL);
-    System.drawString(packFilter ? packFilter : "Filter (e.g. bn)", 14, 77, 2);
+    var filterTxt = packFilter ? packFilter : "Filter (e.g. bn)";
+    System.drawString(filterTxt, 18, 77, 2);
 
-    System.fillRoundRect(164, 70, 68, 30, 4, C_ACCENT);
+    System.fillRoundRect(155, 70, 72, 30, 4, C_ACCENT);
     System.setTextColor(C_WHITE, C_ACCENT);
-    System.drawString("Refresh", 175, 77, 2);
+    System.drawString("Refresh", 168, 77, 2);
 
     if (downloadStatusMsg) {
         System.setTextColor(C_YELLOW, C_BG);
-        System.drawString(downloadStatusMsg, 12, 106, 1);
+        var dispMsg = downloadStatusMsg;
+        if (dispMsg.length > 30) dispMsg = dispMsg.substring(0, 28) + "..";
+        System.drawString(dispMsg, 16, 106, 1);
     }
 
     if (!catalogLoaded) {
         System.setTextColor(C_MUTED, C_BG);
-        System.drawString("Tap 'Refresh' to fetch online packs", 12, 150, 2);
+        System.drawString("Loading catalog from GitHub...", 16, 150, 2);
         return;
     }
 
@@ -464,24 +491,29 @@ function drawDownloadTab() {
 
         var curY = startY + (rendered * itemH);
         var isInstalled = (localPacks.indexOf(p.id) !== -1);
+        var isActive = (activeDictId === p.id);
 
-        System.fillRoundRect(8, curY, SCREEN_W - 16, itemH - 4, 4, C_PANEL);
-        System.drawRoundRect(8, curY, SCREEN_W - 16, itemH - 4, 4, C_BORDER);
+        System.fillRoundRect(12, curY, SCREEN_W - 24, itemH - 4, 4, C_PANEL);
+        System.drawRoundRect(12, curY, SCREEN_W - 24, itemH - 4, 4, C_BORDER);
 
         System.setTextColor(C_WHITE, C_PANEL);
-        System.drawString(p.name, 14, curY + 6, 2);
+        System.drawString(p.name, 18, curY + 6, 2);
 
         System.setTextColor(C_CYAN, C_PANEL);
-        System.drawString(p.size + " - " + p.words + " words", 14, curY + 24, 1);
+        System.drawString(p.size + " - " + p.words + " words", 18, curY + 24, 1);
 
-        if (isInstalled) {
-            System.fillRoundRect(155, curY + 8, 68, 26, 3, 0x02E0);
+        if (isActive) {
+            System.fillRoundRect(SCREEN_W - 75, curY + 8, 60, 26, 3, 0x02E0);
             System.setTextColor(C_WHITE, 0x02E0);
-            System.drawString("Ready", 170, curY + 13, 2);
+            System.drawString("Active", SCREEN_W - 65, curY + 13, 2);
+        } else if (isInstalled) {
+            System.fillRoundRect(SCREEN_W - 75, curY + 8, 60, 26, 3, C_ACCENT);
+            System.setTextColor(C_WHITE, C_ACCENT);
+            System.drawString("Use", SCREEN_W - 57, curY + 13, 2);
         } else {
-            System.fillRoundRect(155, curY + 8, 68, 26, 3, C_GREEN);
+            System.fillRoundRect(SCREEN_W - 75, curY + 8, 60, 26, 3, C_GREEN);
             System.setTextColor(C_BG, C_GREEN);
-            System.drawString("Get", 178, curY + 13, 2);
+            System.drawString("Get", SCREEN_W - 55, curY + 13, 2);
         }
 
         rendered++;
@@ -519,7 +551,7 @@ function render() {
 // ------------------------------------------------------------------------
 function handleTouch(x, y) {
     // Exit App
-    if (x >= 200 && y <= 32) {
+    if (x >= SCREEN_W - 40 && y <= 32) {
         isRunning = false;
         return;
     }
@@ -527,30 +559,37 @@ function handleTouch(x, y) {
     // Tabs
     if (y >= 33 && y <= 65) {
         var tabW = Math.floor(SCREEN_W / 3);
-        currentTab = Math.floor(x / tabW);
-        render();
+        var newTab = Math.floor(x / tabW);
+        if (newTab !== currentTab) {
+            currentTab = newTab;
+            // AUTO-FETCH: Automatically load catalog when tapping 'Online' tab!
+            if (currentTab === TAB_DOWNLOAD && !catalogLoaded) {
+                fetchOnlineCatalog();
+            } else if (currentTab === TAB_LOCAL) {
+                scanLocalPacks();
+            }
+            render();
+        }
         return;
     }
 
     // Search Tab
     if (currentTab === TAB_SEARCH) {
-        // Search Input
-        if (x >= 8 && x <= 195 && y >= 70 && y <= 104) {
-            var input = System.prompt("Enter word to search:", searchQuery);
+        if (x >= 12 && x <= SCREEN_W - 50 && y >= 70 && y <= 104) {
+            var input = System.prompt("Search word:", searchQuery);
             if (typeof input === "string") {
                 performSearch(input);
                 render();
             }
             return;
         }
-        // Clear
-        if (x >= 200 && x <= 232 && y >= 70 && y <= 104 && searchQuery) {
+        if (x >= SCREEN_W - 45 && x <= SCREEN_W - 12 && y >= 70 && y <= 104 && searchQuery) {
             performSearch("");
             render();
             return;
         }
         // Scroll UP
-        if (searchResults.length > 4 && x >= 8 && x <= 113 && y >= 276 && y <= 310) {
+        if (searchResults.length > 4 && x >= 12 && x <= 112 && y >= 276 && y <= 310) {
             if (scrollOffset > 0) {
                 scrollOffset = Math.max(0, scrollOffset - 4);
                 render();
@@ -558,7 +597,7 @@ function handleTouch(x, y) {
             return;
         }
         // Scroll DOWN
-        if (searchResults.length > 4 && x >= 127 && x <= 232 && y >= 276 && y <= 310) {
+        if (searchResults.length > 4 && x >= SCREEN_W - 112 && x <= SCREEN_W - 12 && y >= 276 && y <= 310) {
             if (scrollOffset + 4 < searchResults.length) {
                 scrollOffset = scrollOffset + 4;
                 render();
@@ -581,7 +620,7 @@ function handleTouch(x, y) {
         }
     }
 
-    // Word Detail Back
+    // Detail View Back
     if (currentTab === STATE_DETAIL) {
         if (x >= 70 && x <= 170 && y >= 236 && y <= 270) {
             currentTab = TAB_SEARCH;
@@ -598,15 +637,17 @@ function handleTouch(x, y) {
             var curY = startY + (i * itemH);
             if (y >= curY && y <= curY + itemH) {
                 // Delete
-                if (x >= 180 && x <= 226) {
-                    var delId = localPacks[i];
-                    FS.deleteFile(DICT_DIR + delId + ".json");
-                    scanLocalPacks();
-                    if (activeDictId === delId) {
-                        activeDictId = (localPacks.length > 0) ? localPacks[0] : "";
-                        loadActiveDictionary();
+                if (x >= SCREEN_W - 60 && x <= SCREEN_W - 12) {
+                    if (localPacks.length > 1) {
+                        var delId = localPacks[i];
+                        FS.deleteFile(DICT_DIR + delId + ".json");
+                        scanLocalPacks();
+                        if (activeDictId === delId) {
+                            activeDictId = (localPacks.length > 0) ? localPacks[0] : "default";
+                            loadActiveDictionary();
+                        }
+                        render();
                     }
-                    render();
                     return;
                 }
                 // Activate
@@ -621,8 +662,7 @@ function handleTouch(x, y) {
 
     // Download Tab
     if (currentTab === TAB_DOWNLOAD) {
-        // Filter
-        if (x >= 8 && x <= 158 && y >= 70 && y <= 100) {
+        if (x >= 12 && x <= 147 && y >= 70 && y <= 100) {
             var f = System.prompt("Filter packs:", packFilter);
             if (typeof f === "string") {
                 packFilter = f.trim();
@@ -630,13 +670,10 @@ function handleTouch(x, y) {
             }
             return;
         }
-        // Refresh
-        if (x >= 164 && x <= 232 && y >= 70 && y <= 100) {
+        if (x >= 155 && x <= 228 && y >= 70 && y <= 100) {
             fetchOnlineCatalog();
-            render();
             return;
         }
-        // Download
         if (catalogLoaded && !isDownloading) {
             var dY = 124;
             var dH = 46;
@@ -648,8 +685,18 @@ function handleTouch(x, y) {
                 }
                 var itemTop = dY + (rendered * dH);
                 if (y >= itemTop && y <= itemTop + dH) {
-                    if (x >= 155 && x <= 225) {
-                        downloadPack(p);
+                    if (x >= SCREEN_W - 80 && x <= SCREEN_W - 12) {
+                        var isInstalled = (localPacks.indexOf(p.id) !== -1);
+                        if (isInstalled) {
+                            // If already installed, tapping it directly activates it!
+                            activeDictId = p.id;
+                            FS.writeTextFile(ACTIVE_CONF, activeDictId);
+                            loadActiveDictionary();
+                            render();
+                        } else {
+                            // If not installed, download it!
+                            downloadPack(p);
+                        }
                         return;
                     }
                 }
@@ -660,7 +707,7 @@ function handleTouch(x, y) {
 }
 
 // ------------------------------------------------------------------------
-// Top-Level Execution Loop (Compatible with Emulator & ESP32 Device)
+// Main Execution Loop
 // ------------------------------------------------------------------------
 init();
 render();
