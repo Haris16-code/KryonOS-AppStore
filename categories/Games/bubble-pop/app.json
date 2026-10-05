@@ -1,0 +1,10 @@
+{
+  "name": "Bubble Pop",
+  "packageName": "com.shifat100.bubblepop",
+  "version": "1.0.0",
+  "author": "Shifat100",
+  "type": "Game",
+  "category": "arcade",
+  "description": "Tap matching bubble clusters of 2 or more to pop and refill the board.",
+  "api": 1
+}

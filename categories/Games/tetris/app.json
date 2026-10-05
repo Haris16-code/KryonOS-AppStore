@@ -1,0 +1,10 @@
+{
+  "name": "Tetris",
+  "packageName": "com.shifat100.tetris",
+  "version": "1.0.0",
+  "api": 1,
+  "author": "shifat100",
+  "type": "Game",
+  "category": "Arcade",
+  "description": "Modern neon-styled Tetris with ghost piece, smooth touch controls, and high scores."
+}

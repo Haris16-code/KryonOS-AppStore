@@ -1,0 +1,11 @@
+{
+  "name": "System Info",
+  "packageName": "com.shifat100.systeminfo",
+  "version": "1.0.0",
+  "api": 1,
+  "author": "shifat100",
+  "type": "App",
+  "category": "Utility",
+  "description": "Hardware diagnostics, CPU, RAM, Storage, and Network telemetry monitor.",
+  "permissions": ["storage", "network"]
+}

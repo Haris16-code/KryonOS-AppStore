@@ -1,0 +1,10 @@
+{
+  "name": "Age Calculator",
+  "packageName": "com.kryon.agecalculator",
+  "version": "1.0.0",
+  "author": "Shifat100",
+  "type": "app",
+  "category": "utility",
+  "description": "Calculate exact age or interval between any From and To dates.",
+  "api": 1
+}

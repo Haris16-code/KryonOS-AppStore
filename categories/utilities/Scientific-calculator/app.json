@@ -1,0 +1,12 @@
+{
+  "name": "Scientific calculator",
+  "packageName": "com.shifat100.scientificcalculator",
+  "version": "1.0.0",
+  "metaUrl": "https://raw.githubusercontent.com/shifat100/KryonOS-AppStore/refs/heads/main/categories/utilities/Scientific-calculator/app.json",
+  "api": 1,
+  "author": "Shifat100",
+  "type": "App",
+  "category": "Utility",
+  "description": "A high-performance, responsive scientific calculator app designed for touch displays. Supports advanced trigonometric, logarithmic, and power functions with dual-mode toggle, DEG/RAD switching, and instant history recall.",
+  "changelog": ""
+}

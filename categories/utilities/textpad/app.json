@@ -1,0 +1,13 @@
+{
+  "name": "TextPad",
+  "packageName": "com.shifat100.textpad",
+  "version": "1.0.0",
+  "api": 1,
+  "author": "Shifat100",
+  "type": "App",
+  "category": "Utility",
+  "description": "Full-featured text file reader and line editor for KryonOS.",
+  "permissions": [
+    "storage"
+  ]
+}

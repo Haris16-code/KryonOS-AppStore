@@ -1,0 +1,10 @@
+{
+  "name": "Bubble Shooter",
+  "packageName": "com.shifat100.bubbleshooter",
+  "version": "1.0.0",
+  "author": "Shifat100",
+  "type": "Game",
+  "category": "Arcade ",
+  "description": "Arcade bubble shooter with physics and match-3 popping for KryonOS.",
+  "api": 1
+}

@@ -1,0 +1,14 @@
+{
+  "name": "OmniDict",
+  "packageName": "com.shifat100.omnidict",
+  "version": "1.0.0",
+  "api": 1,
+  "author": "Shifat100",
+  "type": "App",
+  "category": "Education",
+  "description": "Universal dictionary with online multi-language pack downloader.",
+  "permissions": [
+    "storage",
+    "network"
+  ]
+}

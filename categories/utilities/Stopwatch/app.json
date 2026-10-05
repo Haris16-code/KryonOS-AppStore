@@ -1,0 +1,13 @@
+{
+  "name": "Stopwatch",
+  "packageName": "com.kryon.stopwatch",
+  "version": "1.0.0",
+  "api": 1,
+  "author": "shifat100",
+  "type": "App",
+  "category": "Utility",
+  "description": "Precision digital stopwatch with lap tracking, analytics, and file export.",
+  "permissions": [
+    "storage"
+  ]
+}
