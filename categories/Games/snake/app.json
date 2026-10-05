@@ -1,0 +1,10 @@
+{
+  "name": "Snake",
+  "packageName": "com.shifat100.snake",
+  "version": "1.0.0",
+  "api": 1,
+  "author": "shifat100",
+  "type": "Game",
+  "category": "Arcade",
+  "description": "Infinite arcade hopper with moving traffic, river logs, speeding trains, and touch controls."
+}
