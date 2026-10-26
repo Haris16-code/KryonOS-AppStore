@@ -7,12 +7,47 @@
       "app_sha256": "0701a756c126f38f65c6904671172edb7b948dc82e50c90bdde55795e1344a9b",
       "api": 1
     },
+    "Bubble Pop": {
+      "meta": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/Games/bubble-pop/app.json",
+      "meta_sha256": "ea48232c996935166d58b092f6fe7cec79de6192354c3e2bd69e9a83fd06e6da",
+      "app": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/Games/bubble-pop/main.js",
+      "app_sha256": "1ff519d4f256afc8ca0a52c516ed1eb5de5e8df201f4ad44fd6e203a8a13a505",
+      "api": 1
+    },
+    "Bubble Shooter": {
+      "meta": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/Games/bubble_shooter/app.json",
+      "meta_sha256": "79a6c596e1b17493e3919790bdf8f048d859d17a8337bd39034af34186fb10d4",
+      "app": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/Games/bubble_shooter/main.js",
+      "app_sha256": "b0346169b192f791b6c1708448db917e9d93a023da9e9f2802afb69255fe0324",
+      "api": 1
+    },
+    "Crossy Road": {
+      "meta": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/Games/crossy-road/app.json",
+      "meta_sha256": "e340fb8098b2f74dfe496a141da2ac9b129233ae9ace79846cc33417c6cbd2be",
+      "app": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/Games/crossy-road/main.js",
+      "app_sha256": "a321f43273dabc6bf8d4e395b5a90cbb7b0f5dd488b36be298b38b9e599d0c44",
+      "api": 1
+    },
     "Flappy Bird": {
       "meta": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/Games/flappy-bird/app.json",
       "app": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/Games/flappy-bird/main.js",
       "meta_sha256": "09b9bc681079f09082ebe22546c8867f70002e0bd4f28841e8639fcf4c8674d5",
       "app_sha256": "e5a1b06223a43c54fb81fa6d8d99ea3e6327408981cf93f649ff316ef62f9d02",
       "api": 2
+    },
+    "Snake": {
+      "meta": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/Games/snake/app.json",
+      "meta_sha256": "1a59150b96bdda5f39da65ef4529224acf282a6321f47f124ba4945d76f255f7",
+      "app": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/Games/snake/main.js",
+      "app_sha256": "3c980c711e4268ea5dd97e756a622076d98e2937196c3346f0d924f7f4dcad72",
+      "api": 1
+    },
+    "Tetris": {
+      "meta": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/Games/tetris/app.json",
+      "meta_sha256": "943e10b6b6de07abb2d5732dfd76950762dc79b61c848f6f97b9db4c737f45b3",
+      "app": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/Games/tetris/main.js",
+      "app_sha256": "014c84683b2fbc23f1e398987f0d423d0de7451be0c84ce261ea3c775b848932",
+      "api": 1
     },
     "Tictactoe": {
       "meta": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/Games/tictactoe/app.json",

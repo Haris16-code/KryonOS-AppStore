@@ -1,5 +1,12 @@
 {
   "apps": {
+    "Age Calculator": {
+      "meta": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/utilities/Age-Calculator/app.json",
+      "meta_sha256": "7411efb2c43733d39e2df2fedff6bc74b98a9fb7acd18958a0662021ddaeaccd",
+      "app": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/utilities/Age-Calculator/main.js",
+      "app_sha256": "401a808734b3b1841e49bfb9ce0c85e17418a9a3957c940619040df7c070b3d7",
+      "api": 1
+    },
     "Calculator": {
       "meta": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/utilities/Calculator/app.json",
       "app": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/utilities/Calculator/main.js",
@@ -12,6 +19,27 @@
       "app": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/utilities/Notepad/main.js",
       "meta_sha256": "e7019ea728a556e8fe8a0ef1f415327762ca0b6b8357d2a7ed5eea012495be7d",
       "app_sha256": "462aacf786d59083c179a2ce72b48c49a6dbc6e744946a8c6bcb4a8f583ab990",
+      "api": 1
+    },
+    "OmniDict": {
+      "meta": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/utilities/OmniDict/app.json",
+      "meta_sha256": "561c4f7ce4b91b3edd121faeacef4f10ab2d75109d98546322d142b177052c89",
+      "app": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/utilities/OmniDict/main.js",
+      "app_sha256": "af8e64f7b4edd2b194381b5f0790d5ffe12e36ab5a26964b50e6e78ffa566b46",
+      "api": 1
+    },
+    "Scientific calculator": {
+      "meta": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/utilities/Scientific-calculator/app.json",
+      "meta_sha256": "291178ec2550b5c321306a5be34a8c0247dbce369ec833ee72785ca4f76694b9",
+      "app": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/utilities/Scientific-calculator/main.js",
+      "app_sha256": "347dccc23a6cc6b8fe3608468e927c1c0ff21110e1fcc50cff4f2956fefcf10a",
+      "api": 1
+    },
+    "Stopwatch": {
+      "meta": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/utilities/Stopwatch/app.json",
+      "meta_sha256": "404bfe6927afcf3971075b9c66cda3c13b2bc9547026ef991c1aace55e180c7d",
+      "app": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/utilities/Stopwatch/main.js",
+      "app_sha256": "1b906697cae28b9af0a813a34c3ce01dd9c7c550637b2fb4047f2bd5875ea6ec",
       "api": 1
     },
     "Advanced File Manager": {
@@ -50,10 +78,17 @@
       "api": 1
     },
     "System Info": {
-      "meta": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/utilities/sysinfo/app.json",
-      "app": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/utilities/sysinfo/main.js",
-      "meta_sha256": "e98ff068bdc72f2b1c062749e82fd0eb5faeb6a5e380a1f69ab3001dc7f39bb5",
-      "app_sha256": "6e13be4002d5c5d13939ea93a86ca47eb1fdecb0ebf149f59fca3ceab7cabdb9",
+      "meta": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/utilities/system_info_pro/app.json",
+      "app": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/utilities/system_info_pro/main.js",
+      "meta_sha256": "f286ac6f44bc5b59ecb0580292243ee02b8d63402257a53330da5e3937155374",
+      "app_sha256": "91e95829a57139b30b285e8b72679d7abd05b13700ff4437bf8c9b6c391092af",
+      "api": 1
+    },
+    "TextPad": {
+      "meta": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/utilities/textpad/app.json",
+      "meta_sha256": "18d1c467f1ea1b73833ba2a2cc85a37cf74e60ad358dbd51805bfc84c67c19dc",
+      "app": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/utilities/textpad/main.js",
+      "app_sha256": "240413a5cee60de71b980657e0d62e439f30164c331ed0f5027dcac8573805ea",
       "api": 1
     },
     "Thermal Monitoring": {
