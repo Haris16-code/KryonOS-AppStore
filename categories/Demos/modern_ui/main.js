@@ -1,4 +1,4 @@
-// Modern UI Dashboard Demo for HarixOS
+// Modern UI Dashboard Demo for KryonOS
 // Showcases advanced drawing techniques, physics-based scrolling, and double buffering
 
 var SW = System.screenWidth();
