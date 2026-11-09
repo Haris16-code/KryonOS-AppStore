@@ -18,7 +18,7 @@
       "meta": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/Demos/hello_world/app.json",
       "app": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/Demos/hello_world/main.js",
       "meta_sha256": "e41dae7397c8e5b93b90739774f04bf7f60e2e24015d519b8a55361d9666caea",
-      "app_sha256": "4fd167b794be1683e15e79fa032ab030313bdfbe867b7989dd59766417801c52",
+      "app_sha256": "54621ce65bccd5e871cf63079dd0dab6c22a3617d221dfcbcf80a9d9889ada42",
       "api": 1
     },
     "Modern Ui": {
