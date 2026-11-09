@@ -1,4 +1,4 @@
-// HarixOS Paint App
+// KryonOS Paint App
 // Demonstrates touch input, color picking, and drawing primitives!
 
 // Define layout
