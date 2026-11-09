@@ -51,7 +51,7 @@ if (fs.existsSync(categoriesDir)) {
         const categoryPath = path.join(categoriesDir, category);
         const categoryIndexPath = path.join(categoryPath, 'index.json');
 
-        // Load existing category index.json to preserve custom fields (e.g., "api": 1)
+        // Load existing category index.json to preserve custom/extra fields
         let existingCategoryData = { apps: {} };
         if (fs.existsSync(categoryIndexPath)) {
             try {
@@ -78,37 +78,40 @@ if (fs.existsSync(categoriesDir)) {
             if (fs.existsSync(appJsonPath)) {
                 try {
                     const appJson = JSON.parse(fs.readFileSync(appJsonPath, 'utf8'));
-                    const appName = appJson.name;
+                    const appName = appJson.name || appDir;
 
-                    // Build the raw GitHub URLs
+                    // Build raw GitHub URLs
                     const metaRawUrl = `${BASE_RAW_URL}/categories/${category}/${appDir}/app.json`;
                     const appRawUrl = `${BASE_RAW_URL}/categories/${category}/${appDir}/main.js`;
 
-                    // Update metaUrl in app.json and write without trailing newline
+                    // Sync metaUrl in app.json and write back
                     appJson.metaUrl = metaRawUrl;
                     fs.writeFileSync(appJsonPath, JSON.stringify(appJson, null, 2), 'utf8');
 
-                    // Clean trailing newlines and compute SHA-256 for both app.json and main.js
+                    // Clean trailing newlines and compute SHA-256 for both files
                     const metaSha256 = cleanAndHashFile(appJsonPath);
                     const appSha256 = cleanAndHashFile(mainJsPath);
 
-                    // Preserve any existing extra properties (like "api": 1)
                     const previousEntry = existingCategoryData.apps[appName] || {};
+
+                    // Read packageName and api from app.json first, fall back to previousEntry if absent
+                    const packageName = appJson.packageName || appJson.package || previousEntry.packageName;
+                    const apiVersion = appJson.api !== undefined ? appJson.api : previousEntry.api;
+
+                    // Build entry keeping standard keys at predictable positions
                     const updatedEntry = {
                         ...previousEntry,
+                        ...(packageName ? { packageName } : {}),
+                        ...(apiVersion !== undefined ? { api: apiVersion } : {}),
                         meta: metaRawUrl,
                         meta_sha256: metaSha256,
                         app: appRawUrl,
                         app_sha256: appSha256
                     };
 
-                    if (appJson.api !== undefined && updatedEntry.api === undefined) {
-                        updatedEntry.api = appJson.api;
-                    }
-
                     categoryApps.apps[appName] = updatedEntry;
                 } catch (error) {
-                    console.error(`Error parsing ${appJsonPath}:`, error);
+                    console.error(`Error processing ${appJsonPath}:`, error);
                 }
             }
         }
