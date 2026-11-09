@@ -3,7 +3,7 @@
     "Cube3d": {
       "meta": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/Demos/cube3d/app.json",
       "app": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/Demos/cube3d/main.js",
-      "meta_sha256": "e612a77ba5897006d8b93e30b9ce7658d2227482e7fa708d3e4acf1e768de5d5",
+      "meta_sha256": "8de4990b5a4f4f04b1fb0b332d0172fd23267a2e428b1333901335e958a88200",
       "app_sha256": "cb6aa36ff04084b5cc4878a60bdde3f933e8ef36ffb65852316c56c6b66c44b2",
       "api": 1
     },
