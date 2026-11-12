@@ -1,7 +1,7 @@
 {
   "name": "Kryon AI Studio",
   "packageName": "com.kryonos.ai",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "author": "KryonOS Team",
   "description": "Next-generation AI assistant featuring real-time token streaming, hardware sensor JSON extraction, vision analytics, and live quota telemetry.",
   "type": "Utility",
