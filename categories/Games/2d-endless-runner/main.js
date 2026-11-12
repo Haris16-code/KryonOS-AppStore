@@ -1,331 +1,303 @@
 // 2D Endless Runner
-// Uses Sliced Rendering for 0% Flickering
+// Uses Sliced Rendering for 0% Flickering and Multi-Resolution Layout
 
-var SW = System.screenWidth();
-var SH = System.screenHeight();
-var SLICE_H = 32; // Reduced slice height to drastically decrease RAM requirement
-var SLICES = Math.ceil(SH / SLICE_H);
+(function () {
+    var SW = System.screenWidth();
+    var SH = System.screenHeight();
+    var SLICE_H = 30;
+    var SLICES = Math.ceil(SH / SLICE_H);
 
-// Allocate Sliced Double Buffer
-if (!System.createSprite(SW, SLICE_H)) {
-    System.print("Error: Not enough memory for sprite buffer!");
-    while (true) System.delay(100);
-}
+    // Allocate Sliced Double Buffer
+    if (!System.createSprite(SW, SLICE_H)) {
+        System.print("Error: Not enough memory for sprite buffer!");
+        while (true) System.delay(100);
+    }
 
-// Colors
-var C_BG = 0x18E3;      // Darker Background
-var C_LANE = 0x2124;    // Lane separator
-var C_PLAYER = 0x07FF;  // Cyan Hoverboard
-var C_TRAIN = 0xF800;   // Red Obstacle
-var C_COIN = 0xFFE0;    // Gold Coin
-var C_TEXT = 0xFFFF;    // White Text
+    // Colors
+    var C_BG = 0x18E3;
+    var C_LANE = 0x2124;
+    var C_PLAYER = 0x07FF;
+    var C_TRAIN = 0xF800;
+    var C_COIN = 0xFFE0;
+    var C_TEXT = 0xFFFF;
 
-// Game States
-var STATE_MENU = 0;
-var STATE_PLAY = 1;
-var STATE_GAMEOVER = 2;
-var STATE_SETTINGS = 3;
-var currentState = STATE_MENU;
+    // Game States
+    var STATE_MENU = 0;
+    var STATE_PLAY = 1;
+    var STATE_GAMEOVER = 2;
+    var STATE_SETTINGS = 3;
+    var currentState = STATE_MENU;
 
-// Settings
-var showFPS = false;
-var showTemp = false;
+    var showFPS = false;
+    var showTemp = false;
 
-// Game Variables
-var lanes = [40, 120, 200]; // X centers for the 3 lanes
-var playerLane = 1;         // Starts in the middle lane
-var playerY = 260;
-var playerBob = 0;
+    // Responsive Lane & Player Geometry
+    var lanes = [
+        Math.floor(SW * 0.20),
+        Math.floor(SW * 0.50),
+        Math.floor(SW * 0.80)
+    ];
+    var sep1 = Math.floor(SW * 0.35);
+    var sep2 = Math.floor(SW * 0.65);
+    var playerLane = 1;
+    var playerY = Math.floor(SH * 0.80);
+    var playerBob = 0;
 
-var score = 0;
-var speed = 150; // pixels per second
-var distanceTraveled = 0;
+    var btnW = Math.min(180, SW - 60);
+    var btnX = Math.floor((SW - btnW) / 2);
+    var btnH = 36;
 
-var entities = []; // Array of objects: { type: "train"|"coin", lane: 0..2, y: int, h: int }
+    var score = 0;
+    var speed = 150;
+    var distanceTraveled = 0;
+    var entities = [];
 
-// Timing & Input
-var lastTime = System.millis();
-var lastTouch = false;
-var fps = 0;
-var frames = 0;
-var lastFpsTime = System.millis();
-var spawnTimer = 0;
+    var lastTime = System.millis();
+    var lastTouch = false;
+    var fps = 0;
+    var frames = 0;
+    var lastFpsTime = System.millis();
+    var spawnTimer = 0;
 
-// Reset Game
-function resetGame() {
-    playerLane = 1;
-    score = 0;
-    speed = 150;
-    distanceTraveled = 0;
-    entities = [];
-    spawnTimer = 0;
-    lastTime = System.millis();
-}
-
-// Update Game Logic
-function update(dt) {
-    var moveDist = speed * dt;
-    distanceTraveled += moveDist;
-
-    // Animate Player Bobbing
-    playerBob = Math.sin(System.millis() / 150.0) * 5;
-
-    // Spawn Entities
-    spawnTimer += dt;
-    // Spawning frequency gets faster as speed increases
-    var spawnRate = 1.0 - (speed / 1000.0);
-    if (spawnRate < 0.2) spawnRate = 0.2;
-
-    if (spawnTimer > spawnRate) {
+    function resetGame() {
+        playerLane = 1;
+        score = 0;
+        speed = 150;
+        distanceTraveled = 0;
+        entities = [];
         spawnTimer = 0;
-
-        // Randomly choose a lane
-        var lane = Math.floor(Math.random() * 3);
-        if (lane > 2) lane = 2;
-
-        // 70% chance for an obstacle, 30% for a coin
-        if (Math.random() > 0.3) {
-            // Spawn Train
-            entities.push({ type: "train", lane: lane, y: -100, h: 80 });
-        } else {
-            // Spawn Coin
-            entities.push({ type: "coin", lane: lane, y: -20, h: 20 });
-        }
+        lastTime = System.millis();
     }
 
-    // Update Entities & Collision
-    var pX = lanes[playerLane] - 15;
-    var pY = playerY - 20;
-    var pW = 30;
-    var pH = 40;
+    function update(dt) {
+        var moveDist = speed * dt;
+        distanceTraveled += moveDist;
+        playerBob = Math.sin(System.millis() / 150.0) * 5;
 
-    for (var i = entities.length - 1; i >= 0; i--) {
-        var e = entities[i];
-        e.y += moveDist;
+        spawnTimer += dt;
+        var spawnRate = 1.0 - (speed / 1000.0);
+        if (spawnRate < 0.2) spawnRate = 0.2;
 
-        // Remove off-screen entities
-        if (e.y > SH + 20) {
-            entities.splice(i, 1);
-            if (e.type === "train") score += 5; // Passive points for dodging
-            continue;
-        }
+        if (spawnTimer > spawnRate) {
+            spawnTimer = 0;
+            var lane = Math.floor(Math.random() * 3);
+            if (lane > 2) lane = 2;
 
-        // Collision Detection
-        if (e.lane === playerLane) {
-            if (e.type === "train") {
-                // Train hitbox
-                if (pY < e.y + e.h && pY + pH > e.y) {
-                    // CRASH!
-                    currentState = STATE_GAMEOVER;
-                }
-            } else if (e.type === "coin") {
-                // Coin hitbox (approximate as rect)
-                if (pY < e.y + 10 && pY + pH > e.y - 10) {
-                    score += 50;
-                    entities.splice(i, 1); // Collect coin
-                }
-            }
-        }
-    }
-
-    // Increase difficulty
-    speed += dt * 5.0;
-}
-
-// Drawing Functions (All rendering happens inside the Sliced loop)
-function drawSlice(sliceY, dt) {
-    System.bindSprite(true);
-    System.fillScreen(C_BG);
-
-    // --- Draw Background / Lanes ---
-    // Moving track lines
-    var trackOffset = Math.floor(distanceTraveled) % 40;
-    for (var y = -40; y < SH; y += 40) {
-        var realY = y + trackOffset;
-        if (realY >= sliceY && realY < sliceY + SLICE_H + 40) {
-            System.fillRect(80 - 2, realY - sliceY, 4, 20, C_LANE);
-            System.fillRect(160 - 2, realY - sliceY, 4, 20, C_LANE);
-        }
-    }
-
-    if (currentState === STATE_PLAY) {
-        // --- Draw Entities ---
-        for (var i = 0; i < entities.length; i++) {
-            var e = entities[i];
-            if (e.y + e.h >= sliceY && e.y < sliceY + SLICE_H) {
-                var ex = lanes[e.lane];
-                if (e.type === "train") {
-                    System.fillRoundRect(ex - 30, e.y - sliceY, 60, e.h, 5, C_TRAIN);
-                    System.fillRect(ex - 25, e.y - sliceY + 5, 50, 15, 0x0000); // Window
-                } else if (e.type === "coin") {
-                    System.fillCircle(ex, e.y - sliceY, 15, C_COIN);
-                    System.fillCircle(ex, e.y - sliceY, 10, 0xFEA0); // Inner highlight
-                }
-            }
-        }
-
-        // --- Draw Player ---
-        if (playerY + 20 >= sliceY && playerY - 20 < sliceY + SLICE_H) {
-            var px = lanes[playerLane];
-            var py = playerY + playerBob;
-            // Hoverboard shadow
-            System.fillRoundRect(px - 15, py - sliceY - 10, 30, 40, 8, 0x0000);
-            // Hoverboard body
-            System.fillRoundRect(px - 15, py - sliceY - 15, 30, 40, 8, C_PLAYER);
-            // Engine glow
-            System.fillCircle(px, py - sliceY + 20, 8, 0x07FF);
-        }
-
-        // --- HUD ---
-        if (sliceY === 0) { // Only draw on top slice
-            System.setTextColor(C_TEXT, C_BG);
-            System.drawString("SCORE: " + score, 10, 10, 2);
-        }
-    }
-    else if (currentState === STATE_MENU) {
-        // Animated Menu text
-        var titleBob = Math.sin(System.millis() / 200.0) * 10;
-
-        System.setTextColor(0x07FF, C_BG);
-        System.drawString("NEON", 70, 50 + titleBob - sliceY, 4);
-
-        System.setTextColor(0x07FF, C_BG);
-        System.drawString("SURFER", 50, 100 + titleBob - sliceY, 4);
-
-        // Start Button at Y=180
-        System.fillRoundRect(40, 180 - sliceY, 160, 40, 5, 0x07E0);
-        System.setTextColor(0x0000, 0x07E0);
-        System.drawString("START GAME", 65, 192 - sliceY, 2);
-
-        // Settings Button at Y=240
-        System.fillRoundRect(40, 240 - sliceY, 160, 40, 5, 0x7BEF);
-        System.setTextColor(0x0000, 0x7BEF);
-        System.drawString("SETTINGS", 75, 252 - sliceY, 2);
-    }
-    else if (currentState === STATE_SETTINGS) {
-        System.setTextColor(C_TEXT, C_BG);
-        System.drawString("SETTINGS", 60, 30 - sliceY, 4);
-
-        // FPS Toggle Y=100
-        System.fillRoundRect(20, 100 - sliceY, 200, 40, 5, showFPS ? 0x07E0 : 0x7BEF);
-        System.setTextColor(0x0000, showFPS ? 0x07E0 : 0x7BEF);
-        System.drawString("FPS Counter: " + (showFPS ? "ON" : "OFF"), 40, 112 - sliceY, 2);
-
-        // Temp Toggle Y=160
-        System.fillRoundRect(20, 160 - sliceY, 200, 40, 5, showTemp ? 0x07E0 : 0x7BEF);
-        System.setTextColor(0x0000, showTemp ? 0x07E0 : 0x7BEF);
-        System.drawString("Temp Counter: " + (showTemp ? "ON" : "OFF"), 35, 172 - sliceY, 2);
-
-        // Back Button Y=250
-        System.fillRoundRect(40, 250 - sliceY, 160, 40, 5, 0xF800);
-        System.setTextColor(0x0000, 0xF800);
-        System.drawString("BACK", 95, 262 - sliceY, 2);
-    }
-    else if (currentState === STATE_GAMEOVER) {
-        System.setTextColor(0xF800, C_BG);
-        System.drawString("CRASHED!", 50, 120 - sliceY, 4);
-
-        System.setTextColor(C_TEXT, C_BG);
-        System.drawString("FINAL SCORE: " + score, 45, 160 - sliceY, 2);
-
-        System.fillRoundRect(40, 220 - sliceY, 160, 40, 5, 0x07E0);
-        System.setTextColor(0x0000, 0x07E0);
-        System.drawString("PLAY AGAIN", 65, 232 - sliceY, 2);
-    }
-
-    // --- Global Overlays (FPS/Temp) ---
-    if (sliceY === 0) {
-        if (showFPS) {
-            System.setTextColor(0xFFE0, C_BG);
-            System.drawString("FPS: " + fps, 170, 10, 2);
-        }
-        if (showTemp && System.hasTemperatureSensor()) {
-            System.setTextColor(0x07FF, C_BG);
-            System.drawString(System.getTemperature().toFixed(1) + "C", 170, 30, 2);
-        }
-    }
-
-    System.bindSprite(false);
-    System.pushSprite(0, sliceY);
-}
-
-// Input Handling
-function handleInput() {
-    var t = System.getTouch();
-
-    // Check for exit
-    if (t.touched && t.y < 20 && t.x > 200) {
-        return true; // Exit app
-    }
-
-    if (t.touched && !lastTouch) {
-        if (currentState === STATE_MENU) {
-            if (t.y > 190 && t.y < 240) {
-                resetGame();
-                currentState = STATE_PLAY;
-            } else if (t.y > 240 && t.y < 290) {
-                currentState = STATE_SETTINGS;
-            }
-        }
-        else if (currentState === STATE_SETTINGS) {
-            if (t.y > 90 && t.y < 150) { // FPS Toggle
-                showFPS = !showFPS;
-            } else if (t.y > 150 && t.y < 210) { // Temp Toggle
-                showTemp = !showTemp;
-            } else if (t.y > 240 && t.y < 300) { // Back
-                currentState = STATE_MENU;
-            }
-        }
-        else if (currentState === STATE_PLAY) {
-            // Tap left half to move left, right half to move right
-            if (t.x < SW / 2) {
-                if (playerLane > 0) playerLane--;
+            if (Math.random() > 0.3) {
+                entities.push({ type: "train", lane: lane, y: -90, h: 72 });
             } else {
-                if (playerLane < 2) playerLane++;
+                entities.push({ type: "coin", lane: lane, y: -20, h: 20 });
             }
         }
-        else if (currentState === STATE_GAMEOVER) {
-            if (t.y > 210 && t.y < 270) {
-                resetGame();
-                currentState = STATE_PLAY;
+
+        var pY = playerY - 20;
+        var pH = 40;
+
+        for (var i = entities.length - 1; i >= 0; i--) {
+            var e = entities[i];
+            e.y += moveDist;
+
+            if (e.y > SH + 20) {
+                entities.splice(i, 1);
+                if (e.type === "train") score += 5;
+                continue;
+            }
+
+            if (e.lane === playerLane) {
+                if (e.type === "train") {
+                    if (pY < e.y + e.h && pY + pH > e.y) {
+                        currentState = STATE_GAMEOVER;
+                    }
+                } else if (e.type === "coin") {
+                    if (pY < e.y + 10 && pY + pH > e.y - 10) {
+                        score += 50;
+                        entities.splice(i, 1);
+                    }
+                }
             }
         }
-    }
-    lastTouch = t.touched;
-    return false;
-}
 
-// Main Loop
-while (true) {
-    var now = System.millis();
-    var dt = (now - lastTime) / 1000.0; // Delta time in seconds
-    lastTime = now;
-
-    // Safety cap dt to prevent huge jumps if CPU hangs
-    if (dt > 0.1) dt = 0.1;
-
-    if (handleInput()) break; // Exit
-
-    if (currentState === STATE_PLAY) {
-        update(dt);
+        speed += dt * 5.0;
     }
 
-    // Render Frame (Sliced)
-    for (var slice = 0; slice < SLICES; slice++) {
-        drawSlice(slice * SLICE_H, dt);
+    function drawSlice(sliceY) {
+        System.bindSprite(true);
+        System.fillScreen(C_BG);
+
+        var trackOffset = Math.floor(distanceTraveled) % 40;
+        for (var y = -40; y < SH; y += 40) {
+            var realY = y + trackOffset;
+            if (realY + 20 >= sliceY && realY < sliceY + SLICE_H) {
+                System.fillRect(sep1 - 2, realY - sliceY, 4, 20, C_LANE);
+                System.fillRect(sep2 - 2, realY - sliceY, 4, 20, C_LANE);
+            }
+        }
+
+        if (currentState === STATE_PLAY) {
+            for (var i = 0; i < entities.length; i++) {
+                var e = entities[i];
+                if (e.y + e.h >= sliceY && e.y < sliceY + SLICE_H) {
+                    var ex = lanes[e.lane];
+                    if (e.type === "train") {
+                        System.fillRoundRect(ex - 26, e.y - sliceY, 52, e.h, 5, C_TRAIN);
+                        System.fillRect(ex - 21, e.y - sliceY + 5, 42, 14, 0x0000);
+                    } else if (e.type === "coin") {
+                        System.fillCircle(ex, e.y - sliceY, 14, C_COIN);
+                        System.fillCircle(ex, e.y - sliceY, 9, 0xFEA0);
+                    }
+                }
+            }
+
+            if (playerY + 28 >= sliceY && playerY - 22 < sliceY + SLICE_H) {
+                var px = lanes[playerLane];
+                var py = playerY + playerBob;
+                System.fillRoundRect(px - 15, py - sliceY - 10, 30, 40, 8, 0x0000);
+                System.fillRoundRect(px - 15, py - sliceY - 15, 30, 40, 8, C_PLAYER);
+                System.fillCircle(px, py - sliceY + 20, 8, 0x07FF);
+            }
+
+            if (sliceY === 0) {
+                System.setTextColor(C_TEXT, C_BG);
+                System.drawString("SCORE: " + score, 10, 10, 2);
+            }
+        } else if (currentState === STATE_MENU) {
+            var titleBob = Math.sin(System.millis() / 200.0) * 6;
+            var titleY = Math.floor(SH * 0.14);
+            var startY = Math.floor(SH * 0.54);
+            var setY = startY + btnH + 12;
+
+            System.setTextColor(0x07FF, C_BG);
+            System.drawString("NEON", Math.floor((SW - 72) / 2), titleY + titleBob - sliceY, 4);
+            System.drawString("SURFER", Math.floor((SW - 108) / 2), titleY + 38 + titleBob - sliceY, 4);
+
+            System.fillRoundRect(btnX, startY - sliceY, btnW, btnH, 5, 0x07E0);
+            System.setTextColor(0x0000, 0x07E0);
+            System.drawString("START GAME", Math.floor((SW - 90) / 2), startY + 10 - sliceY, 2);
+
+            System.fillRoundRect(btnX, setY - sliceY, btnW, btnH, 5, 0x7BEF);
+            System.setTextColor(0x0000, 0x7BEF);
+            System.drawString("SETTINGS", Math.floor((SW - 72) / 2), setY + 10 - sliceY, 2);
+        } else if (currentState === STATE_SETTINGS) {
+            var y1 = Math.floor(SH * 0.28);
+            var y2 = y1 + btnH + 12;
+            var y3 = y2 + btnH + 16;
+
+            System.setTextColor(C_TEXT, C_BG);
+            System.drawString("SETTINGS", Math.floor((SW - 120) / 2), Math.floor(SH * 0.08) - sliceY, 4);
+
+            System.fillRoundRect(btnX, y1 - sliceY, btnW, btnH, 5, showFPS ? 0x07E0 : 0x7BEF);
+            System.setTextColor(0x0000, showFPS ? 0x07E0 : 0x7BEF);
+            System.drawString("FPS: " + (showFPS ? "ON" : "OFF"), btnX + 20, y1 + 10 - sliceY, 2);
+
+            System.fillRoundRect(btnX, y2 - sliceY, btnW, btnH, 5, showTemp ? 0x07E0 : 0x7BEF);
+            System.setTextColor(0x0000, showTemp ? 0x07E0 : 0x7BEF);
+            System.drawString("Temp: " + (showTemp ? "ON" : "OFF"), btnX + 20, y2 + 10 - sliceY, 2);
+
+            System.fillRoundRect(btnX, y3 - sliceY, btnW, btnH, 5, 0xF800);
+            System.setTextColor(0x0000, 0xF800);
+            System.drawString("BACK", Math.floor((SW - 36) / 2), y3 + 10 - sliceY, 2);
+        } else if (currentState === STATE_GAMEOVER) {
+            var gy = Math.floor(SH * 0.28);
+            var againY = Math.floor(SH * 0.66);
+
+            System.setTextColor(0xF800, C_BG);
+            System.drawString("CRASHED!", Math.floor((SW - 130) / 2), gy - sliceY, 4);
+
+            System.setTextColor(C_TEXT, C_BG);
+            System.drawString("FINAL SCORE: " + score, Math.floor((SW - 130) / 2), gy + 44 - sliceY, 2);
+
+            System.fillRoundRect(btnX, againY - sliceY, btnW, btnH, 5, 0x07E0);
+            System.setTextColor(0x0000, 0x07E0);
+            System.drawString("PLAY AGAIN", Math.floor((SW - 90) / 2), againY + 10 - sliceY, 2);
+        }
+
+        if (sliceY === 0) {
+            if (showFPS) {
+                System.setTextColor(0xFFE0, C_BG);
+                System.drawString("FPS:" + fps, SW - 105, 10, 2);
+            }
+            if (showTemp && System.hasTemperatureSensor()) {
+                System.setTextColor(0x07FF, C_BG);
+                System.drawString(System.getTemperature().toFixed(1) + "C", SW - 105, 28, 2);
+            }
+        }
+
+        System.bindSprite(false);
+        System.pushSprite(0, sliceY);
     }
 
-    // FPS Calculation
-    frames++;
-    if (now - lastFpsTime >= 1000) {
-        fps = frames;
-        frames = 0;
-        lastFpsTime = now;
+    function handleInput() {
+        var t = System.getTouch();
+
+        if (t.touched && t.y <= 40 && t.x >= SW - 40) {
+            return true;
+        }
+
+        if (t.touched && !lastTouch) {
+            if (currentState === STATE_MENU) {
+                var startY = Math.floor(SH * 0.54);
+                var setY = startY + btnH + 12;
+                if (t.x >= btnX && t.x <= btnX + btnW) {
+                    if (t.y >= startY && t.y <= startY + btnH) {
+                        resetGame();
+                        currentState = STATE_PLAY;
+                    } else if (t.y >= setY && t.y <= setY + btnH) {
+                        currentState = STATE_SETTINGS;
+                    }
+                }
+            } else if (currentState === STATE_SETTINGS) {
+                var y1 = Math.floor(SH * 0.28);
+                var y2 = y1 + btnH + 12;
+                var y3 = y2 + btnH + 16;
+                if (t.x >= btnX && t.x <= btnX + btnW) {
+                    if (t.y >= y1 && t.y <= y1 + btnH) showFPS = !showFPS;
+                    else if (t.y >= y2 && t.y <= y2 + btnH) showTemp = !showTemp;
+                    else if (t.y >= y3 && t.y <= y3 + btnH) currentState = STATE_MENU;
+                }
+            } else if (currentState === STATE_PLAY) {
+                if (t.x < SW / 2) {
+                    if (playerLane > 0) playerLane--;
+                } else {
+                    if (playerLane < 2) playerLane++;
+                }
+            } else if (currentState === STATE_GAMEOVER) {
+                var againY = Math.floor(SH * 0.66);
+                if (t.x >= btnX && t.x <= btnX + btnW && t.y >= againY && t.y <= againY + btnH) {
+                    resetGame();
+                    currentState = STATE_PLAY;
+                }
+            }
+        }
+        lastTouch = t.touched;
+        return false;
     }
 
-    // Yield to OS
-    System.delay(1);
-}
+    while (true) {
+        var now = System.millis();
+        var dt = (now - lastTime) / 1000.0;
+        lastTime = now;
+        if (dt > 0.1) dt = 0.1;
 
-System.deleteSprite();
-System.fillScreen(0x0000);
+        if (handleInput()) break;
+
+        if (currentState === STATE_PLAY) {
+            update(dt);
+        }
+
+        for (var slice = 0; slice < SLICES; slice++) {
+            drawSlice(slice * SLICE_H);
+        }
+
+        frames++;
+        if (now - lastFpsTime >= 1000) {
+            fps = frames;
+            frames = 0;
+            lastFpsTime = now;
+        }
+
+        System.delay(1);
+    }
+
+    System.deleteSprite();
+    System.fillScreen(0x0000);
+})();

@@ -1,12 +1,13 @@
 {
   "name": "Calculator",
   "packageName": "com.kryonos.calculator",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "metaUrl": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/utilities/Calculator/app.json",
   "api": 1,
+  "main": "main.js",
   "author": "KryonOS Team",
   "type": "App",
   "category": "Utility",
   "description": "A basic calculator for quick math.",
-  "changelog": ""
+  "changelog": "Fixed bottom button row clipping on both 240x320 and 320x240 T-Deck Plus displays by computing the 5x4 grid dynamically from SW and SH, and added input sanitization."
 }

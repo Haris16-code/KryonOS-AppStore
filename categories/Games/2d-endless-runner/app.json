@@ -1,12 +1,13 @@
 {
   "name": "2D Endless Runner",
   "packageName": "com.kryonos.2dendlessrunner",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "metaUrl": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/Games/2d-endless-runner/app.json",
   "api": 1,
+  "main": "main.js",
   "author": "KryonOS Team",
   "type": "Game",
   "category": "Arcade",
   "description": "A fun 2D endless running game.",
-  "changelog": "Ram And Performance Optimizations"
+  "changelog": "Updated for T-Deck Plus (320x240) and multi-display support: dynamic lane geometry, SH-anchored player and menu buttons, and SW - 40 exit guard."
 }

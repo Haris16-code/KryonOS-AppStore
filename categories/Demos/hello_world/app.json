@@ -1,12 +1,13 @@
 {
   "name": "Hello World",
   "packageName": "com.kryonos.helloworld",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "metaUrl": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/Demos/hello_world/app.json",
   "api": 1,
+  "main": "main.js",
   "author": "KryonOS Team",
   "type": "App",
   "category": "Utility",
   "description": "A simple Hello World application.",
-  "changelog": ""
+  "changelog": "Added dynamic multi-resolution layout (240x320 & 320x240) and safe System.delay loop with touch exit."
 }

@@ -1,12 +1,13 @@
 {
   "name": "Clock",
   "packageName": "com.kryonos.clock",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "metaUrl": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/utilities/clock/app.json",
   "api": 1,
+  "main": "main.js",
   "author": "KryonOS Team",
   "type": "App",
   "category": "Utility",
   "description": "A digital clock application.",
-  "changelog": ""
+  "changelog": "Fixed undefined lastTimeStr ReferenceError on alarm dismiss and updated all tabs (Clock, World, Alarm, Stopwatch, Timer) to dynamically scale for T-Deck Plus (320x240) and portrait (240x320) screens."
 }
