@@ -6,7 +6,7 @@
       "meta": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/AI/com.kryonos.ai/app.json",
       "meta_sha256": "7beec56aa7f3236eb65fa08f6744171713e4cc3d05af607e65be42a6346d8863",
       "app": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/AI/com.kryonos.ai/main.js",
-      "app_sha256": "b49d4f3213659bc2af1e8b1de9c5a3d176e1931d973ce8f85ad2443aed571043"
+      "app_sha256": "7b374fdcf7f1fd470567c433a72209e1edc0fef45f12633c08dd0ffedeb1600e"
     },
     "Neural Image Studio": {
       "packageName": "com.kryonos.imagegen",
