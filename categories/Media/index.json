@@ -1,12 +1,20 @@
 {
   "apps": {
     "Image Viewer": {
-      "meta": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/Media/image_viewer/app.json",
-      "app": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/Media/image_viewer/main.js",
-      "meta_sha256": "63b9d185c047a64d7c9b77b1f6cbda43afcc2e6e341cdf611356f2a902347409",
-      "app_sha256": "4a0c7621d9493ab3dcc67532736544016776d90186c0b22bbee4affe88cd1227",
+      "meta": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/Media/com.kryonos.imageviewer/app.json",
+      "app": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/Media/com.kryonos.imageviewer/main.js",
+      "meta_sha256": "67d34f02d99b7d26c7022dbaf3fd68c2dccbe68fb8db6bf597eeb19a8c902503",
+      "app_sha256": "3f54c5e1032ed688ae639895ab62253dbb2420dfd2d70ab67f6e11a6723a05cd",
       "api": 1,
       "packageName": "com.kryonos.imageviewer"
+    },
+    "Audio Player": {
+      "packageName": "com.kryonos.musicplayer",
+      "api": 3,
+      "meta": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/Media/com.kryonos.musicplayer/app.json",
+      "meta_sha256": "5b482d2a811913ce879dcc88cbf8afb32d26a22b4cd89abbe2b7658407339d32",
+      "app": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/Media/com.kryonos.musicplayer/main.js",
+      "app_sha256": "3f53274f7ad32c7bf00689aa23af1519280c47049c54ecee6e8cb23cb60411b9"
     }
   }
 }

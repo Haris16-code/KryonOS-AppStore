@@ -11,24 +11,24 @@
     "Graphic Demo": {
       "meta": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/Demos/graphic_demo/app.json",
       "app": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/Demos/graphic_demo/main.js",
-      "meta_sha256": "5ff4d2debaff0341d09ed4094b2a3c2b2fa2e8ef9d116745fd972c7df069814b",
-      "app_sha256": "d3cfaa07a4c41013e0c50b3268d223f875faad4e88aa5326741ef622dda6fb4c",
+      "meta_sha256": "ed52c2f6af3f6acecca1bef133677595295dd53d04dcbccd21d21e259b1525cb",
+      "app_sha256": "75dede5bbccc4eb67161a2132a63e21d49483de6e5e161f1088cf09b2fcb823c",
       "api": 1,
       "packageName": "com.kryonos.graphicdemo"
     },
     "Hello World": {
       "meta": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/Demos/hello_world/app.json",
       "app": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/Demos/hello_world/main.js",
-      "meta_sha256": "e41dae7397c8e5b93b90739774f04bf7f60e2e24015d519b8a55361d9666caea",
-      "app_sha256": "54621ce65bccd5e871cf63079dd0dab6c22a3617d221dfcbcf80a9d9889ada42",
+      "meta_sha256": "57cf6c672c96f9314dee8da8ff3539c62b65dbde38cf9f3cbbda62c8c378b18c",
+      "app_sha256": "d3162dbd34b5b6ee5dc2f590ced40dd7a6c892a94d2778f47a632d88d6482b03",
       "api": 1,
       "packageName": "com.kryonos.helloworld"
     },
     "Modern Ui": {
       "meta": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/Demos/modern_ui/app.json",
       "app": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/Demos/modern_ui/main.js",
-      "meta_sha256": "a9538a86f74fb75f634ff8d129c5bf06d388d57eac7fb28f669b5dab7138a52f",
-      "app_sha256": "c5fae897ff47aa09607733f52cdbc2596c9fd3d7e07aded93a68cf8e77738fea",
+      "meta_sha256": "fe8b1ce1779d466c20bc4dcd267a6ef4e7cb6d57238326057ace1b8143e43aaa",
+      "app_sha256": "7ce341f7b6fd11e8bc834ff15e23896e6a8340ba532ecb020de5e1f25e053073",
       "api": 1,
       "packageName": "com.kryonos.modernui"
     }

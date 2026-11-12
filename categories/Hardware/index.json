@@ -1,10 +1,32 @@
 {
   "apps": {
+    "BLE Keyboard": {
+      "meta": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/Hardware/com.kryonos.blekeyboard/app.json",
+      "meta_sha256": "9be14babc0c9390d738f45a469a399c9765718cccfcaa3f9b1a1d2b2a4024da0",
+      "app": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/Hardware/com.kryonos.blekeyboard/main.js",
+      "app_sha256": "0bcfce4e69415a77969f53341b39aeae3bcd6e9be8a8af152f191bfbc812f2bd"
+    },
+    "Bluetooth Inspector": {
+      "packageName": "com.kryonos.bttest",
+      "api": 3,
+      "meta": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/Hardware/com.kryonos.bttest/app.json",
+      "meta_sha256": "f1cdfcd03677c777c352db53b3b710a6074ad38d3ead0ba0deaa7c937d0c260c",
+      "app": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/Hardware/com.kryonos.bttest/main.js",
+      "app_sha256": "56502401e84fc5174d612f34c4e4a24e22f15063c9ecb0c66393760fdb81ee18"
+    },
+    "GPS Navigator & Diagnostics": {
+      "packageName": "com.kryonos.gpstest",
+      "api": 3,
+      "meta": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/Hardware/com.kryonos.gpstest/app.json",
+      "meta_sha256": "1a999f7a5b33164cc4f74372821e847f5d1ae24c80c9f9d35b093ea871c569e2",
+      "app": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/Hardware/com.kryonos.gpstest/main.js",
+      "app_sha256": "d619e9b6a4b5061e82590c2625d0fa580eddd6c2ef2d2549313d0904ad752b6a"
+    },
     "Led Controller": {
       "meta": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/Hardware/led_controller/app.json",
       "app": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/Hardware/led_controller/main.js",
-      "meta_sha256": "7630ff22c15c05be39aa57e6accef1654117404078863254dae34643bec3fae7",
-      "app_sha256": "4487b504394b79a578ea7ecb2112ea706594eab310d04d4f952417b64b7e933b",
+      "meta_sha256": "79d54fc4b1b31a84f8272c776b49d26943dd06744a0bf598b057defa62b7d3a7",
+      "app_sha256": "208ffb15940608d5d0358b745c46b8a2f3a261430b7bc3b1128ec7a80d4e784f",
       "api": 1,
       "packageName": "com.kryonos.ledcontroller"
     }

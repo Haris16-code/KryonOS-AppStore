@@ -1,0 +1,28 @@
+{
+  "apps": {
+    "Kryon AI Studio": {
+      "packageName": "com.kryonos.ai",
+      "api": 2,
+      "meta": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/AI/com.kryonos.ai/app.json",
+      "meta_sha256": "7beec56aa7f3236eb65fa08f6744171713e4cc3d05af607e65be42a6346d8863",
+      "app": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/AI/com.kryonos.ai/main.js",
+      "app_sha256": "b49d4f3213659bc2af1e8b1de9c5a3d176e1931d973ce8f85ad2443aed571043"
+    },
+    "Neural Image Studio": {
+      "packageName": "com.kryonos.imagegen",
+      "api": 3,
+      "meta": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/AI/com.kryonos.imagegen/app.json",
+      "meta_sha256": "38582a308d8f7496d8d13575f16505af8d1a4d9ad257ffb50b961cfd91b72127",
+      "app": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/AI/com.kryonos.imagegen/main.js",
+      "app_sha256": "b95e7e5148d4b334564a6f8e0bb001bfcf3295022ea5a2343ce91feafaa9a0d8"
+    },
+    "Local AI Chat": {
+      "packageName": "com.kryonos.localai",
+      "api": 3,
+      "meta": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/AI/com.kryonos.localai/app.json",
+      "meta_sha256": "61f71ae3eaf3ced922338d07879e2eef872915760bd8b10209a2aaeaa18beeb3",
+      "app": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/AI/com.kryonos.localai/main.js",
+      "app_sha256": "3f8341bd765535a1c1bed572a27f6f980db9f70b0896c69c1dff12704b240167"
+    }
+  }
+}

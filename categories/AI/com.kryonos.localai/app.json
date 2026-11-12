@@ -7,5 +7,6 @@
   "type": "Utility",
   "category": "Artificial Intelligence",
   "api": 3,
-  "main": "main.js"
+  "main": "main.js",
+  "metaUrl": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/AI/com.kryonos.localai/app.json"
 }

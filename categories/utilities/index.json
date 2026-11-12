@@ -3,72 +3,79 @@
     "Calculator": {
       "meta": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/utilities/Calculator/app.json",
       "app": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/utilities/Calculator/main.js",
-      "meta_sha256": "b09eb7bda35331c15bc05d33318fccf1684f198ca9bc737ffa896f380b75f058",
-      "app_sha256": "0e19a2457a83401920d1bc0b925c2251114a5257e038050e41cd2e545c453a70",
+      "meta_sha256": "3ba45a07b7e130891060c965f30035411cce5f315a27d2bed2abc398e958635c",
+      "app_sha256": "b6dde8a512898b453c600722317d3ced37306b29240dbc5330f552810cb55dd6",
       "api": 1,
       "packageName": "com.kryonos.calculator"
     },
     "Notepad": {
       "meta": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/utilities/Notepad/app.json",
       "app": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/utilities/Notepad/main.js",
-      "meta_sha256": "e7019ea728a556e8fe8a0ef1f415327762ca0b6b8357d2a7ed5eea012495be7d",
-      "app_sha256": "462aacf786d59083c179a2ce72b48c49a6dbc6e744946a8c6bcb4a8f583ab990",
+      "meta_sha256": "57d265a631fb5e54ffe2b271c2000a88b8e668113f5a601905d566673256d396",
+      "app_sha256": "8171164b45c8642d31d980ca29650370ec2bc89d7e0dcddf1cb42b68fbf72d6c",
       "api": 1,
       "packageName": "com.kryonos.notepad"
     },
     "Advanced File Manager": {
       "meta": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/utilities/advanced_file_manager/app.json",
       "app": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/utilities/advanced_file_manager/main.js",
-      "meta_sha256": "bf91c17277586f1d6766139d0396314a485967a507dd4b1cda0ccfb11a204d52",
-      "app_sha256": "687093908f44a6e6e5b7d36a6e8faed34e7fd3f3ee89d0b32439c4df45003b38",
-      "api": 1,
+      "meta_sha256": "f353f70303c7adc6b56a70ee118e225011bfd750934117dab5ece2c915c04a89",
+      "app_sha256": "1b626c3622f688f2a0066d8472207b043edb0fefe8a2c8b500cc4ef2121e0d49",
+      "api": 2,
       "packageName": "com.kryonos.advancedfilemanager"
     },
     "Benchmark": {
       "meta": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/utilities/benchmark/app.json",
       "app": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/utilities/benchmark/main.js",
-      "meta_sha256": "e5f8b990afdd51dc7c4f9e7525ab6986fdb17c6262685ee117740d07af92e6d4",
-      "app_sha256": "1e36d5e87ce761bd9842acc58ff4b328110de8ecce62ca3c83f4e793093d3574",
+      "meta_sha256": "8cf18f688971526be5ce91c97298ff22d885d34df757e678ee289238b7cc4d0f",
+      "app_sha256": "25e2373c08adabb1a013e1727525eeb1f10ede9213cee62729a3e9151bd7efbb",
       "api": 1,
       "packageName": "com.kryonos.benchmark"
     },
     "Calendar": {
       "meta": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/utilities/calendar/app.json",
       "app": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/utilities/calendar/main.js",
-      "meta_sha256": "090879894b8b52d7947a2c8220f144fddbf5f3cf58624a5b6ab6b7995f656663",
-      "app_sha256": "85bb684c6fc8c7b9427c9d31d2774f660c71a3b98f6637a4d1c0cf320b6c5ae2",
+      "meta_sha256": "efab5822eb0244e3067316644798e185abf01fa7801e3fe73d0cbe58017fb2e6",
+      "app_sha256": "4ae9e0b606ba84f786f8299b7fe5af9719b388e3638ff7520146a3a473513dcf",
       "api": 1,
       "packageName": "com.kryonos.calendar"
     },
     "Clock": {
       "meta": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/utilities/clock/app.json",
       "app": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/utilities/clock/main.js",
-      "meta_sha256": "5262126f1d7c534e6ae2d67435adfbdce8f5aa30d55bb2cec417b045b35ebe0b",
-      "app_sha256": "43c7fa567ac40c0798b179186275d8b5cf074e097843af1964892d5c9e2511c1",
+      "meta_sha256": "f52361461ad6c83b4a6860e3dbd12aca8e075ef4ac7836af14a46c0c48569737",
+      "app_sha256": "a6a5a7acd56e17a911d387216f3977abd3afa5108678dfdee5162b95e08b97bd",
       "api": 1,
       "packageName": "com.kryonos.clock"
+    },
+    "File Manager Pro": {
+      "packageName": "com.kryonos.filemanager",
+      "meta": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/utilities/com.kryonos.filemanager/app.json",
+      "meta_sha256": "63fd58eb6eab6f82c13fb71d7bf5464868bfb2bb29b8c8a33a1f567f3021e687",
+      "app": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/utilities/com.kryonos.filemanager/main.js",
+      "app_sha256": "b76036eb34d198041c410f7c87bb741985c9d6e35065c4afad6d8a46565be34a"
     },
     "Paint": {
       "meta": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/utilities/paint/app.json",
       "app": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/utilities/paint/main.js",
-      "meta_sha256": "cb9f05222d09c2ae36463898584ccb1381443bb6208c998c60a5f39e9d8f39a1",
-      "app_sha256": "135e5e28beb43088665695acca96ea4f0ab1d7e22261b3b13a506d4ce862e660",
+      "meta_sha256": "536b625d3022f18da7a39d736b56e8474cf4e596696912f11c6d8d09b48be557",
+      "app_sha256": "3096ef0afe2d3199ee3f55716f7a1f5d8eef41c99c96aeb65c7ef7496b8a3087",
       "api": 1,
       "packageName": "com.kryonos.paint"
     },
     "System Info": {
       "meta": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/utilities/sysinfo/app.json",
       "app": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/utilities/sysinfo/main.js",
-      "meta_sha256": "e98ff068bdc72f2b1c062749e82fd0eb5faeb6a5e380a1f69ab3001dc7f39bb5",
-      "app_sha256": "6e13be4002d5c5d13939ea93a86ca47eb1fdecb0ebf149f59fca3ceab7cabdb9",
+      "meta_sha256": "d34951b1e4ceff0e00d1e5346e3534c2671a78573c2a59f4116b4349e7cd00b2",
+      "app_sha256": "4b793bd015412c117eb0ff27a9cf4b00648c065f39f9dd7f1064b3f046130168",
       "api": 1,
       "packageName": "com.kryonos.systeminfo"
     },
     "Thermal Monitoring": {
       "meta": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/utilities/thermals/app.json",
       "app": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/utilities/thermals/main.js",
-      "meta_sha256": "bf67650ed617b90bf0d05973322eeead44a968484e92c7b867a23f3697946c2c",
-      "app_sha256": "4fffcafd4ba0d2b4da07cedbbaf0008662c3ae3ceb4388da6b188c86bb980e89",
+      "meta_sha256": "2e40741411dd43fa91a41c7eb94d79769671b5bf420dbf03958a5f75f0c05d3c",
+      "app_sha256": "eefcfce5f94df87f3dc7934bca6c6c6941d588adcdfee947505e4816ee4bc998",
       "api": 1,
       "packageName": "com.kryonos.thermalmonitoring"
     }

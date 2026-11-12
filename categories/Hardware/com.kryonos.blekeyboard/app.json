@@ -5,6 +5,6 @@
   "description": "Turns LilyGO T-Deck Plus into a wireless Bluetooth keyboard for phones and PCs.",
   "main": "main.js",
   "api_level": 3,
-  "category": "Tools"
+  "category": "Tools",
+  "metaUrl": "https://raw.githubusercontent.com/Haris16-code/KryonOS-AppStore/refs/heads/main/categories/Hardware/com.kryonos.blekeyboard/app.json"
 }
-
